@@ -1,0 +1,117 @@
+.secciones-todopago-config{
+    list-style:none;
+    display:table;
+    margin-bottom: 50px;
+}
+.secciones-todopago-config li{
+    float:left;
+    padding:10px;
+    margin-right:5px;
+    border: 1px solid #d3d3d3;
+    border-bottom:none;
+    border-radius: 3px;
+    padding-bottom: 0px;
+    width: 150px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#config{
+    padding-left: 42px;
+}
+
+#prod{
+    padding-left: 42px;
+}
+
+#orden{
+    padding-left: 42px;
+}
+
+#config input[type="text"]{
+    margin-bottom: 15px;    
+}
+
+#config select{
+    margin-bottom: 15px;   
+}
+.input-todopago{
+    display: block;
+    width: 600px;
+}
+
+.input-todopago label{
+    width: 290px;
+    display: block;
+    float: left;
+}
+
+.subtitulo-todopago{
+    background-color: #D3D3D3;
+    width: 210px;
+    text-align: center;
+    padding: 3px;
+    margin-bottom: 10px; 
+}
+
+#config-producto-todopago{
+    display:none;
+    position: fixed;
+    top: 50%;
+    background-color: rgb(223, 239, 252);
+    border: 1px solid #C5DBEC;
+    box-shadow: 0px 0px 10px 2px #C5DBEC;
+    padding-left: 120px;
+    padding-right: 120px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    left: 33%;
+    color: #2E6E9E;
+}
+
+#status-orders{
+    display:none;
+    position: fixed;
+    top: 30%;
+    background-color: rgb(223, 239, 252);
+    border: 1px solid #C5DBEC;
+    box-shadow: 0px 0px 10px 2px #C5DBEC;
+    padding-left: 120px;
+    padding-right: 120px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    left: 33%;
+    color: #2E6E9E;
+}
+
+#guardar{
+    float:right;
+}
+
+.editar{
+    cursor:pointer;
+}
+
+#config-producto-todopago #titulo{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.close-todopago{
+    border-radius: 10px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.close-status-todopago{
+    border-radius: 10px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
