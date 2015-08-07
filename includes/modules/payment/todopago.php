@@ -169,7 +169,7 @@ class todopago extends base {
         return $string;
     }
     
-    
+    //first_step_todopago
     function after_process() {
 
         //Quito $customer_id, $response_array
@@ -223,7 +223,7 @@ class todopago extends base {
             	'EncodingMethod' => 'XML',
             	'Merchant' => strval($merchant),
             	'URL_OK' =>  zen_href_link('checkout_success_todopago', 'referer=todopago', 'SSL'),
-             	'URL_ERROR' => zen_href_link('checkout_success_todopago', 'referer=todopago', 'SSL')
+             	'URL_ERROR' => zen_href_link('checkout_error_todopago', '', 'SSL')
             );
             
             $logDir = dirname(__FILE__).'/todopago.log';            
@@ -233,11 +233,11 @@ class todopago extends base {
 
             $paramsSAR['comercio'] = $optionsSAR_comercio;
             $paramsSAR['operacion'] = $optionsSAR_operacion;
-            error_log('params SAR '.json_encode($paramsSAR)."\n", 3, $logDir);
+            error_log(date('d-m-Y H:i:s').' - todopago - orden '.$insert_id.': params SAR - parametros: '.json_encode($paramsSAR)."\n", 3, $logDir);
 
             $rta = $connector->sendAuthorizeRequest($optionsSAR_comercio, $optionsSAR_operacion);
-            error_log('response SAR '.json_encode($rta)."\n", 3, $logDir);        
-            setcookie('RequestKey',$rta["RequestKey"],  time() + (86400 * 30), "/");     
+            error_log(date('d-m-Y H:i:s').' - todopago - orden '.$insert_id.': response SAR - parametros: '.json_encode($rta)."\n", 3, $logDir);        
+            setcookie('RequestKey', $rta["RequestKey"], time() + (86400 * 30), "/");     
             
             //echo json_encode($optionsSAR_comercio).'<br/>';
             //echo json_encode($optionsSAR_operacion).'<br/>';

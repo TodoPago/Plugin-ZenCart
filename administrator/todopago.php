@@ -81,7 +81,7 @@
         <td>
         <table style="margin-left: 35px;" border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
           <tr>
-            <td class="pageHeading">TodoPago v1.0 | Configuraci&oacute;n </td>
+            <td class="pageHeading">TodoPago v1.1.0 | Configuraci&oacute;n </td>
             <td class="pageHeading">
              
             </td>
@@ -141,7 +141,7 @@ $ambiente = (isset($row["ambiente"])?$row["ambiente"]:"");
 ?>
 
 <div class="input-todopago">
-<label>Modo Test o Producci&oacute;n</label>
+<label>Modo Developers o Producci&oacute;n</label>
 <select name="ambiente">
 <option value="">Seleccione</option>
 <option value="test" <?php echo($ambiente=="test"?"selected":"")?>>Developers</option>
@@ -155,7 +155,7 @@ $ambiente = (isset($row["ambiente"])?$row["ambiente"]:"");
 <input type="text" value="<?php echo(isset($row["deadline"])?$row["deadline"]:"")?>" placeholder="Dead Line" name="deadline"/>
 </div>
 
-<div class="subtitulo-todopago">AMBIENTE TEST</div>
+<div class="subtitulo-todopago">AMBIENTE DEVELOPERS</div>
 
 <div class="input-todopago">
 <label>ID Site Todo Pago</label>
@@ -411,7 +411,7 @@ $('#data-table').dataTable(
 <tbody>
 <?php
 
-$sql = "select orders_id,customers_name,customers_telephone,customers_email_address,date_purchased,orders_status_name from ". TABLE_ORDERS. " as o inner join ". TABLE_ORDERS_STATUS. " as os on os.orders_status_id = o.orders_status order by date_purchased desc";
+$sql = "select orders_id,customers_name,customers_telephone,customers_email_address,date_purchased,orders_status_name from ". TABLE_ORDERS. " as o inner join ". TABLE_ORDERS_STATUS. " as os on os.orders_status_id = o.orders_status where os.language_id = " . $_SESSION['languages_id'] . " order by date_purchased desc";
 //echo $sql;
 $res = $db->Execute($sql);
 // echo $sql;
@@ -492,5 +492,5 @@ $('#orders-table').dataTable(
     })  
   </script>
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
+  //require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');

@@ -17,6 +17,7 @@ $params = '';
 $sql = "select * from todo_pago_configuracion";
 $res = $db->Execute($sql);
 
+//second_step_todopago
 if (!$res->EOF){    
     
     $row = $res->fields;
@@ -41,15 +42,15 @@ if (!$res->EOF){
         'AnswerKey'  => $answerKey    
     );
     
-    $logDir = dirname(__FILE__).'/todopago.log';            
-    $logText = date('d-m-Y H:i:s').' - todopago - orden no se';
+    $logDir = dirname(__FILE__).'/../../../modules/payment/todopago.log';            
+    $logText = date('d-m-Y H:i:s').' - todopago - orden '.$orden.': ';
     $logText .= 'second step';
     error_log($logText."\n", 3, $logDir);
 
-    error_log(json_encode($optionsGAA)."\n", 3, $logDir);
+    error_log(date('d-m-Y H:i:s').' - todopago - orden '.$orden.': params GAA - parametros: '.json_encode($optionsGAA)."\n", 3, $logDir);
 
     $rta2 = $connector->getAuthorizeAnswer($optionsGAA);
-    error_log(json_encode($rta2)."\n", 3, $logDir);
+    error_log(date('d-m-Y H:i:s').' - todopago - orden '.$orden.': response GAA - parametros: '.json_encode($rta2)."\n", 3, $logDir);
 
     if ($rta2['StatusCode']== -1){
         if ($rta2['Payload']['Answer']['PAYMENTMETHODNAME'] == 'PAGOFACIL' || $rta2['Payload']['Answer']['PAYMENTMETHODNAME']== 'RAPIPAGO' ){           
@@ -122,7 +123,7 @@ $_SESSION['cart']->reset(true);
 echo "<label>Gracias por pagar con TodoPago!</label>";
 
 if ($params != ''){
-    echo "Para imprimir tu cup&oacute;n haz click <a target='_blank' href='".HTTP_SERVER.'/'.DIR_WS_CATALOG."/extras/todopago/todo_pago_print.php?params=".$params."'>aqu&iacute; </a>";      
+    //echo "Para imprimir tu cup&oacute;n haz click <a target='_blank' href='".HTTP_SERVER.'/'.DIR_WS_CATALOG."/extras/todopago/todo_pago_print.php?params=".$params."'>aqu&iacute; </a>";      
 }
 
 echo "<img width='350px' src='".$logo."' />";
