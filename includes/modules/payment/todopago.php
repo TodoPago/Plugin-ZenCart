@@ -176,7 +176,7 @@ class todopago extends base {
         global $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $ppe_order_total_check, $HTTP_POST_VARS, $comments, $currencies, $insert_id;
 
         global $db;
-        $gv_check = $db->Execute("select customers_id from ".DB_PREFIX."customers where customers_email_address = 'hernan.chaz@gmail.com'");
+        $gv_check = $db->Execute("select customers_id from ".DB_PREFIX."customers where customers_email_address = '".$order->customer['email_address']."'");
         $custid = $gv_check->fields['customers_id'];
         //echo 'custid: '.$custid.'<br/>';
         //echo json_encode($order).'<br/>';
