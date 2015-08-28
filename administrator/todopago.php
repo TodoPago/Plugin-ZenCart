@@ -81,7 +81,7 @@
         <td>
         <table style="margin-left: 35px;" border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
           <tr>
-            <td class="pageHeading">TodoPago v1.2.0 | Configuraci&oacute;n </td>
+            <td class="pageHeading">TodoPago v1.3.0 | Configuraci&oacute;n </td>
             <td class="pageHeading">
              
             </td>
@@ -103,7 +103,7 @@
 <div id="todopago">
   <ul class="secciones-todopago-config">
     <li><a class="tabs-todopago" todopago="#config">Configuracion</a></li>
-    <li><a class="tabs-todopago" todopago="#prod">Productos</a></li>
+    <!-- <li><a class="tabs-todopago" todopago="#prod">Productos</a></li> -->
     <li><a class="tabs-todopago" todopago="#orden">Ordenes</a></li>
   </ul>
   <div id="config">  
@@ -491,6 +491,6 @@ $('#orders-table').dataTable(
   
     })  
   </script>
+</body>
 <?php
-  //require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
