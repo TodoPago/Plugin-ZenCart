@@ -20,6 +20,8 @@ La versión de este plug in esta testeada en PHP 5.3-5.4-5.6, Zen-Cart 1.5.4
 2.  Ir a Modules -> Payment -> TodoPago -> Install
 
 ![imagen de instalacion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/install.png)
+Observación: Descomentar <strong>extension=php_soap.dll</strong> y <strong>extension=php_openssl.dll</strong> del php.ini, ya que para la conexión al gateway se utiliza la clase SoapClient del API de PHP.
+
 [<sub>Volver a inicio</sub>](#inicio)
 
 <a name="confplugin"></a>
