@@ -134,7 +134,7 @@ abstract class ControlFraude {
 
 		foreach($this->order->products as $item){
 			
-			$product_id = explode(":",$item['id'])[0];
+			$product_id = current(explode(":",$item['id']));
 			global $db;
 		    $sql = "SELECT cd.categories_name 
 					FROM ".TABLE_CATEGORIES_DESCRIPTION." cd 

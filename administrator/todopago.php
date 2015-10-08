@@ -81,7 +81,7 @@
         <td>
         <table style="margin-left: 35px;" border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
           <tr>
-            <td class="pageHeading">TodoPago v1.3.0 | Configuraci&oacute;n </td>
+            <td class="pageHeading">TodoPago v1.4.0 | Configuraci&oacute;n </td>
             <td class="pageHeading">
              
             </td>

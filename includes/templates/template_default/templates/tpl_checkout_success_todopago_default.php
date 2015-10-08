@@ -52,7 +52,7 @@ function createLogger($modo, $order_id) {
     $tplogger = new TodoPagoLogger();
     $tplogger->setPhpVersion(phpversion());
     $tplogger->setCommerceVersion(zend_version());
-    $tplogger->setPluginVersion('1.3.0');
+    $tplogger->setPluginVersion('1.4.0');
     $tplogger->setEndPoint($modo);
     $tplogger->setCustomer('customers_id');
     $tplogger->setOrder($order_id);

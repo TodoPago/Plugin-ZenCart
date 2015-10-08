@@ -2,6 +2,7 @@
     list-style:none;
     display:table;
     margin-bottom: 50px;
+    width: 100%;
 }
 .secciones-todopago-config li{
     float:left;
