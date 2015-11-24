@@ -1,19 +1,14 @@
 <?php
-/*
-  $Id$
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-  Copyright (c) 2013 osCommerce
-  Released under the GNU General Public License
-*/
 
-   
-    require('includes/application_top.php');
-    
-    ?>
+require('includes/application_top.php');
+require_once(dirname(__FILE__).'/../includes/modules/payment/todopago/includes/todopago_ctes.php');
+require_once(dirname(__FILE__).'/../includes/modules/payment/todopago/vendor/autoload.php');
+
+?>
     <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?> </title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
@@ -42,16 +37,25 @@
     require(DIR_WS_INCLUDES . 'header.php');
 
     $mensaje =""; 
-    
+
     if (isset($_POST["submit"])){
-    
+        $autorization_post = str_replace('\"', '"', $_POST["authorization"]);
+
+        //print_r($autorization_post);
+
+        if(json_decode($autorization_post) == NULL) {
+            //armo json de autorization        
+            $autorizationId = new stdClass();
+            $autorizationId->Authorization = $_POST["authorization"];
+            $_POST["authorization"] = json_encode($autorizationId);
+        }    
+
         unset($_POST["submit"]);
         
         $query = "update todo_pago_configuracion set ";
         
         foreach($_POST as $key=>$value){
-        $query .= $key. "='".$value."',";
-        
+            $query .= $key. "='".$value."',";        
         }
         
         $query = trim($query,",");
@@ -64,6 +68,8 @@
     $sql = "select * from todo_pago_configuracion";
     $res = $db->Execute($sql);
     $row = $res->fields;
+
+    $autorization = json_decode($row['authorization']);
    
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo HTTP_SERVER.'/'.DIR_WS_CATALOG?>/includes/modules/payment/todopago/todopago.css"/>
@@ -81,7 +87,7 @@
         <td>
         <table style="margin-left: 35px;" border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
           <tr>
-            <td class="pageHeading">TodoPago v1.4.0 | Configuraci&oacute;n </td>
+            <td class="pageHeading">TodoPago v<?php echo TP_VERSION ?> | Configuraci&oacute;n </td>
             <td class="pageHeading">
              
             </td>
@@ -89,7 +95,7 @@
           </tr> 
           <tr>
             <td>
-            <img src="<?php echo HTTP_SERVER.'/'.DIR_WS_CATALOG?>/includes/modules/payment/todopago/includes/todopago.jpg" />
+            <img src="http://www.todopago.com.ar/sites/todopago.com.ar/files/pluginstarjeta.jpg" />
             </td>
           </tr>
         </table>
@@ -103,14 +109,15 @@
 <div id="todopago">
   <ul class="secciones-todopago-config">
     <li><a class="tabs-todopago" todopago="#config">Configuracion</a></li>
-    <!-- <li><a class="tabs-todopago" todopago="#prod">Productos</a></li> -->
+    <li><a class="tabs-todopago" todopago="#prod">Productos</a></li>
     <li><a class="tabs-todopago" todopago="#orden">Ordenes</a></li>
   </ul>
+  
   <div id="config">  
         <form action="" method="post">
         <div class="input-todopago">
         <label>Authorization HTTP</label>
-        <input type="text" value='<?php echo(isset($row["authorization"])?$row["authorization"]:"")?>' placeholder="Authorization HTTP" name="authorization"/>
+        <input type="text" value='<?php echo (isset($autorization->Authorization)? $autorization->Authorization:"")?>' placeholder="Authorization HTTP" name="authorization"/>
         </div>
 
 <?php
@@ -158,23 +165,23 @@ $ambiente = (isset($row["ambiente"])?$row["ambiente"]:"");
 <div class="subtitulo-todopago">AMBIENTE DEVELOPERS</div>
 
 <div class="input-todopago">
-<label>ID Site Todo Pago</label>
+<label>ID Site Todo Pago (Merchant ID)</label>
 <input type="text" value="<?php echo(isset($row["test_merchant"])?$row["test_merchant"]:"")?>" placeholder="ID Site Todo Pago" name="test_merchant"/>
 </div>
 
 <div class="input-todopago">
-<label>Security Code</label>
+<label>Security Code (Key sin PRISMA/TOD.. ni espacio)</label>
 <input type="text" value="<?php echo(isset($row["test_security"])?$row["test_security"]:"")?>" placeholder="Security Code" name="test_security"/>
 </div>
 <div class="subtitulo-todopago">AMBIENTE PRODUCCION</div>
 
 <div class="input-todopago">
-<label>ID Site Todo Pago</label>
+<label>ID Site Todo Pago (Merchant ID)</label>
 <input type="text" value="<?php echo(isset($row["production_merchant"])?$row["production_merchant"]:"")?>" placeholder="ID Site Todo Pago" name="production_merchant"/>
 </div>
 
 <div class="input-todopago">
-<label>Security Code</label>
+<label>Security Code (Key sin PRISMA/TOD.. ni espacio)</label>
 <input type="text" value="<?php echo(isset($row["production_security"])?$row["production_security"]:"")?>" placeholder="Security Code" name="production_security"/>
 </div> 
 <div class="subtitulo-todopago">ESTADOS DE LA ORDEN</div>
@@ -282,7 +289,6 @@ foreach($opciones as $key=>$value){
 
 $sql = "select p.products_id,pd.products_name,p.products_model from ". TABLE_PRODUCTS. " as p inner join ".TABLE_PRODUCTS_DESCRIPTION." as pd on p.products_id = pd.products_id where language_id=1";
 $res = $db->Execute($sql);
-// echo $sql;
 $i =0;
 while (!$res->EOF){ 
     
@@ -412,9 +418,8 @@ $('#data-table').dataTable(
 <?php
 
 $sql = "select orders_id,customers_name,customers_telephone,customers_email_address,date_purchased,orders_status_name from ". TABLE_ORDERS. " as o inner join ". TABLE_ORDERS_STATUS. " as os on os.orders_status_id = o.orders_status where os.language_id = " . $_SESSION['languages_id'] . " order by date_purchased desc";
-//echo $sql;
+
 $res = $db->Execute($sql);
-// echo $sql;
 $i =0;
 while (!$res->EOF){ 
     

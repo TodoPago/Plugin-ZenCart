@@ -36,7 +36,7 @@ En esta pantalla existen 3 tabs
 
 Configuración
 
-<strong>Authorization HTTP:</strong> Header en formato JSON. Ejemplo: {"Authorization":"PRISMA 912EC803B2CE49E4A541068D12345678"}<br />
+<strong>Authorization HTTP:</strong> Codigo de autorización otorgado por Todo Pago. Ejemplo: PRISMA 912EC803B2CE49E4A541068D12345678<br />
 <strong>Security Code:</strong> Código provisto por Todo Pago<br />
 <strong>ID Site Todo Pago:</strong> Nombre de comercio provisto por Todo Pago<br />
 <strong>End Point:</strong> Provisto por Todo Pago (es una url)<br />
