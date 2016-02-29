@@ -1,0 +1,5 @@
+{
+    "require": {
+        "todopago/php-sdk": "dev-master"
+    }
+}

@@ -1,8 +1,6 @@
 <?php
 require_once 'logger.php';
-require_once dirname(__FILE__).'/../todopago_ctes.php';
-require_once dirname(__FILE__).'/../TodoPago/lib/Sdk.php';
-
+require_once dirname(__FILE__).'/todopago_ctes.php';
 
 class loggerFactory{
     public static function createLogger($payment=false, $mode=null, $customer=null, $order=null){

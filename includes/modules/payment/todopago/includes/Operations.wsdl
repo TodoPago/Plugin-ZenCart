@@ -298,22 +298,22 @@
    </wsdl:binding>
    <wsdl:service name="Operations">
       <wsdl:port name="OperationsHttpsSoap11Endpoint" binding="ns0:OperationsSoap11Binding">
-         <soap:address location="https://10.123.4.121:8243/services/Operations.OperationsHttpsSoap11Endpoint"/>
+         <soap:address location="https://10.123.4.121:8243/services/t/1.1/Operations.OperationsHttpsSoap11Endpoint"/>
       </wsdl:port>
       <wsdl:port name="OperationsHttpSoap11Endpoint" binding="ns0:OperationsSoap11Binding">
-         <soap:address location="http://10.123.4.121:8280/services/Operations.OperationsHttpSoap11Endpoint"/>
+         <soap:address location="http://10.123.4.121:8280/services/t/1.1/Operations.OperationsHttpSoap11Endpoint"/>
       </wsdl:port>
       <wsdl:port name="OperationsHttpsSoap12Endpoint" binding="ns0:OperationsSoap12Binding">
-         <soap12:address location="https://10.123.4.121:8243/services/Operations.OperationsHttpsSoap12Endpoint"/>
+         <soap12:address location="https://10.123.4.121:8243/services/t/1.1/Operations.OperationsHttpsSoap12Endpoint"/>
       </wsdl:port>
       <wsdl:port name="OperationsHttpSoap12Endpoint" binding="ns0:OperationsSoap12Binding">
-         <soap12:address location="http://10.123.4.121:8280/services/Operations.OperationsHttpSoap12Endpoint"/>
+         <soap12:address location="http://10.123.4.121:8280/services/t/1.1/Operations.OperationsHttpSoap12Endpoint"/>
       </wsdl:port>
       <wsdl:port name="OperationsHttpsEndpoint" binding="ns0:OperationsHttpBinding">
-         <http:address location="https://10.123.4.121:8243/services/Operations.OperationsHttpsEndpoint"/>
+         <http:address location="https://10.123.4.121:8243/services/t/1.1/Operations.OperationsHttpsEndpoint"/>
       </wsdl:port>
       <wsdl:port name="OperationsHttpEndpoint" binding="ns0:OperationsHttpBinding">
-         <http:address location="http://10.123.4.121:8280/services/Operations.OperationsHttpEndpoint"/>
+         <http:address location="http://10.123.4.121:8280/services/t/1.1/Operations.OperationsHttpEndpoint"/>
       </wsdl:port>
    </wsdl:service>
 </wsdl:definitions>

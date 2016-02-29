@@ -6,6 +6,7 @@ Plug in para la integración con gateway de pago <strong>Todo Pago</strong>
 - [Consideraciones Generales](#consideracionesgenerales)
 - [Instalación](#instalacion)
 - [Configuración plugin](#confplugin)
+- [Devoluciones] (#devoluciones)
 - [Datos adiccionales para prevención de fraude](#cybersource) 
 - [Tablas de referencia](#tablas)
 
@@ -44,10 +45,20 @@ Configuración
 
 ![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/config.png)
 
-![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/orders.png)
-
-![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/products.png)
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/orders.png)<br><br>
+Para las devoluciones se debe agregar los estados "Refund" y "Partial Refund", desde la seccion, Admin -> Localization -> Order Status.
+<a name="cosulta_transacciones"></a>
+## Consulta de Transacciones
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/todopago-transacciones.png)
 [<sub>Volver a inicio</sub>](#inicio)
+
+<a name="devoluciones"></a>
+## Devoluciones
+TodoPago permite realizar la devolucion total o parcial de dinero de una orden de compra.<br> 
+Para ello dirigirse en el menú a Tools->TodoPago configuracion->Ordenes, en esta pagina se encuentra las ordenes de compra realizadas con Todopago.<br> 
+En cada orden se encuentra la opcion "Devolver" que mostrara un modal con la opcion de devolucion total y devolucion parcial junto con el campo para ingresar el monto.
+
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/devoluciones-zencart.png)
 
 <a name="cybersource"></a>
 ## Prevención de Fraude

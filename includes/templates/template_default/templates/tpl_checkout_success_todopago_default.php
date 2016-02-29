@@ -114,6 +114,7 @@ function second_step_todopago($order_id) {
 
 $logo = HTTP_SERVER.''.DIR_WS_CATALOG.'includes/modules/payment/todopago/includes/todopago.jpg';
 $order_id = $orders->fields['orders_id'];
+
 second_step_todopago($order_id);
 
 
@@ -156,11 +157,11 @@ $_SESSION['cart']->reset(true);
     <!-- bof payment-method-alerts -->
     <?php
     if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_messages'] != '') {
-        ?>
+    ?> 
         <div class="content">
             <?php echo $_SESSION['payment_method_messages']; ?>
         </div>
-        <?php
+    <?php
     }
     ?>
     <!-- eof payment-method-alerts -->
