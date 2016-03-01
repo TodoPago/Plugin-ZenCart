@@ -153,9 +153,9 @@ class todopago extends base {
         $optionsSAR_operacion['CURRENCYCODE'] = '032';
         $optionsSAR_operacion['CSMDD6'] = $this->todoPagoConfig['canal'];
         $optionsSAR_operacion['CSMDD12'] = $this->todoPagoConfig['deadline'];
-        $optionsSAR_operacion['PUSHNOTIFYMETHOD'] = 'application/x-www-form-urlencoded';
-        $optionsSAR_operacion['PUSHNOTIFYENDPOINT'] = HTTP_SERVER . DIR_WS_CATALOG . 'todo_pago_push_notification.php';
-        $optionsSAR_operacion['PUSHNOTIFYSTATES'] = 'CouponCharged';
+        //$optionsSAR_operacion['PUSHNOTIFYMETHOD'] = 'application/x-www-form-urlencoded';
+        //$optionsSAR_operacion['PUSHNOTIFYENDPOINT'] = HTTP_SERVER . DIR_WS_CATALOG . 'todo_pago_push_notification.php';
+        //$optionsSAR_operacion['PUSHNOTIFYSTATES'] = 'CouponCharged';
 
         $optionsSAR_comercio = array (
             'Security' => $data['security'],
