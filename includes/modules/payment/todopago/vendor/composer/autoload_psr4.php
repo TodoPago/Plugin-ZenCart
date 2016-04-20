@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'TodoPago\\' => array($vendorDir . '/todopago/php-sdk/TodoPago/lib'),
+    'TodoPago\\' => array($baseDir . '/TodoPago/lib'),
 );

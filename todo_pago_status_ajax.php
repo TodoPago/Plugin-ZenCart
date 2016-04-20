@@ -24,24 +24,48 @@ if (!$res->EOF) {
 
     $optionsGS = array('MERCHANT'=>$res->fields[$modo."merchant"], 'OPERATIONID'=>$orderId);
 
-    $rta4 = $connector->getStatus($optionsGS);
+    $status = $connector->getStatus($optionsGS);
+ 
+    $rta = '';
+    $refunds = $status['Operations']['REFUNDS'];
 
-    if (isset($rta4["Operations"])) {
+    $auxArray = array(
+         "REFUND" => $refunds
+         );
 
-        $rta4 = $rta4["Operations"];
-        $response = "<table>";
-
-        foreach($rta4 as $key => $value) {
-            if (is_array($value)) {
-                $value = implode(',', $value);
-            }
-            $response .="<tr><td>".$key."</td><td>".$value."</td></tr>";
-        }
-
-        echo "</table>";
-    } else {
-        $response = "No hay operaciones para consultar";
+    if($refunds != null){  
+        $aux = 'REFUND'; 
+        $auxColection = 'REFUNDS'; 
     }
 
-    echo $response;
+    if (isset($status['Operations']) && is_array($status['Operations']) ) {
+        foreach ($status['Operations'] as $key => $value) {
+       
+             if(is_array($value) && $key == $auxColection){
+               
+                $rta .= " $key: \n";
+                foreach ($auxArray[$aux] as $key2 => $value2) {              
+                    $rta .= "  $aux: \n";                
+                    if(is_array($value2)){                    
+                        foreach ($value2 as $key3 => $value3) {
+                            if(is_array($value3)){                    
+                                foreach ($value3 as $key4 => $value4) {
+                                    $rta .= "   - $key4: $value4 </br>";
+                                }
+                             }
+                        }
+                    }
+                }            
+             }else{             
+                 if(is_array($value)){
+                     $rta .= "$key: </br>";
+                 }else{
+                     $rta .= "$key: $value </br>";
+                 }
+             } 
+        }
+    }else{ $rta = 'No hay operaciones para esta orden.'; }    
+    echo($rta);
+
+   
 }

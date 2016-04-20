@@ -1,5 +1,21 @@
 {
+    "name": "todopago/php-sdk",
+    "description": "SDK para TodoPago",
     "require": {
-        "todopago/php-sdk": "dev-master"
-    }
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "TodoPago\\": "TodoPago/lib"
+        }
+    },
+    "repositories": [
+        {
+             "type": "composer",
+             "url": "https://packagist.org"
+        },
+        { 
+            "packagist": false 
+        }
+    ]
 }

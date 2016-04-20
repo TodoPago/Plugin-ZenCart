@@ -23,7 +23,7 @@ class todopago extends base {
     var $code, $title, $description, $enabled, $logo;
 
     function todopago() {
-	global $order;
+    global $order;
         $this->todopagoTransaccion = new TodopagoTransaccion();
         $this->code = 'todopago';
         $this->title = "TodoPago";
@@ -98,6 +98,7 @@ class todopago extends base {
             $connector_data = $this->create_tp_connector();
 
             if( ! isset($_GET['Answer'])) {
+                
                 $paramsSAR = $this->get_paydata($connector_data);
                 $this->call_sar($connector_data['connector'], $connector_data['header'], $paramsSAR);
             } else {
@@ -188,7 +189,6 @@ class todopago extends base {
 
     private function call_sar($connector, $http_header, $paramsSAR) {
         global $db, $insert_id;
-
         try {
             $rta = $connector->sendAuthorizeRequest($paramsSAR['comercio'], $paramsSAR['operacion']);
 
@@ -209,17 +209,21 @@ class todopago extends base {
         }
 
         $query = $this->todopagoTransaccion->recordFirstStep($insert_id, $paramsSAR, $rta);
-        $this->tplogger->info("query recordFirstStep: ".$query);
-        
+        $this->tplogger->info("query recordFirstStep: ".$query);  
+
         $resultConfig = $db->Execute('SELECT * FROM todo_pago_configuracion');
         $formType = $resultConfig->fields['tipo_formulario'];
 
         if($formType == 0){
+            // form externo
             header('Location: '.$rta['URL_Request']);
+            exit;
         }elseif($formType == 1){
+            // form hibrido
             //sanitized
-            $url = str_replace("&amp;", "&", zen_href_link("tp_formulario_pago", "id=".$insert_id, 'SSL'));
+            $url = str_replace("&amp;", "&", zen_href_link("tp_form_hibrid", "id=".$insert_id, 'SSL'));
             header('Location: '.$url);
+            exit;   
         }
         die();
     }
@@ -227,7 +231,7 @@ class todopago extends base {
     public function showError() {
         global $messageStack;
 
-        $messageStack->add_session('header','No se pudo realizar la acciÛn, intente nuevamente.', 'error');
+        $messageStack->add_session('header','No se pudo realizar la acci√≥n, intente nuevamente.', 'error');
         zen_redirect(zen_href_link(FILENAME_DEFAULT));
     }
     

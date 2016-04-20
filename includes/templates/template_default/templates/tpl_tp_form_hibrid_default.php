@@ -14,9 +14,11 @@
 		$library = "resources/TPHybridForm-v0.1.js";
 		  
 		if($ambiente == "test"){
+		  // developers	
 		  $endpoint = "https://developers.todopago.com.ar/";
 		}else{
-		  $endpoint = "https://apis.todopago.com.ar/";  
+			// produccion
+			$endpoint = "https://forms.todopago.com.ar/";  
 		}
 
 		$endpoint .= $library;

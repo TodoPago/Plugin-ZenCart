@@ -28,7 +28,6 @@ class Client extends \SoapClient
 
         $options = array(
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_SSL_VERIFYPEER => false,
 
@@ -42,7 +41,6 @@ class Client extends \SoapClient
         curl_setopt_array($soap_do , $options);
 
         $output = curl_exec($soap_do);
-		
         if( $output === false)
         {
 			$err = 'Curl error: ' . curl_error($soap_do);

@@ -69,7 +69,7 @@ if($order_id != null && $refund_type != null){
 			$response = "La anulacion se realizo satisfactoriamente";
 
 		}else{
-			$response = "Ocurrio un error en la anulacion, vuelva a intentarlo en unos minutos. Codigo de error: ".$voidResponse['StatusCode'];
+			$response = "Ocurrio un error en la anulacion, vuelva a intentarlo en unos minutos. Codigo de error: ".$voidResponse['StatusCode'] . ' - ' . $refResponse['StatusMessage'];
 		}
 
 	}elseif($refund_type == "parcial"){
@@ -107,7 +107,7 @@ if($order_id != null && $refund_type != null){
 		    
 	    	$response = "La devolucion se realizo satisfactoriamente";
 		}else{
-			$response = "Ocurrio un error en la devolucion, vuelva a intentarlo en unos minutos. Codigo de error: ".$refResponse['StatusCode'];
+			$response = "Ocurrio un error en la devolucion, vuelva a intentarlo en unos minutos. Codigo de error: ".$refResponse['StatusCode'] . ' - ' . $refResponse['StatusMessage'];
 		}
 	}
 

@@ -1,123 +1,135 @@
 <?php
-
+require_once(dirname(__FILE__).'/../../../modules/payment/todopago/vendor/autoload.php');
+include_once(dirname(__FILE__).'/../../../modules/payment/todopago/includes/todopago_ctes.php');
+include_once(dirname(__FILE__).'/../../../modules/payment/todopago/includes/loggerFactory.php');
+include_once(dirname(__FILE__).'/../../../modules/payment/todopago/includes/TodopagoTransaccion.php');
 use TodoPago\Sdk as Sdk;
-
-include_once(dirname(__FILE__).'/../../../modules/payment/todopago/includes/Sdk.php');
-include_once(dirname(__FILE__).'/../../../modules/payment/todopago/includes/logger.php');
-
-define('TP_STATUS_OK', -1);
-
-function _recollect_data($order_id) {
+function getTpConfig() {
     global $db;
-
-    $sql = "select * from todo_pago_configuracion";
+    $sql = "select * from " . TABLE_TP_CONFIGURACION;
     $res = $db->Execute($sql);
-
     if ($res->EOF) {
         error_log('No se cargo la configuracion.');
         return array();
     }
-
-    $config = $res->fields;
-
-    $modo = $config["ambiente"]."_";
-    $http_header = json_decode($config["authorization"],1);
-    $http_header["user_agent"] = 'PHPSoapClient';
-    $end_point =  $config[$modo."endpoint"];
-    $security_code = $config[$modo."security"];
-    $merchant =  $config[$modo."merchant"];
-
-    $connector = new Sdk($http_header, ($config["ambiente"] == 'test') ? 'test' : 'prod');
-    $optionsGS = array('MERCHANT'=>$config[$modo."merchant"], 'OPERATIONID'=>$order_id);
-
-    $requestKey = $_COOKIE['RequestKey'];
-    $answerKey = $_GET['Answer'];
-
-    $optionsGAA = array (
-        'Security'   => $security_code,
-        'Merchant'   => $merchant,
-        'RequestKey' => $requestKey,
-        'AnswerKey'  => $answerKey
-    );
-    $config['order_id'] = $order_id;
-
-    $logger = createLogger($modo, $order_id);
-    $logger->debug('todoPagoConfig: '.json_encode($config));
-
-    return compact('connector', 'optionsGS', 'optionsGAA', 'logger', 'config');
+    return $res->fields;
 }
-
-function createLogger($modo, $order_id) {
-
-    $tplogger = new TodoPagoLogger();
-    $tplogger->setPhpVersion(phpversion());
-    $tplogger->setCommerceVersion(zend_version());
-    $tplogger->setPluginVersion('1.4.0');
-    $tplogger->setEndPoint($modo);
-    $tplogger->setCustomer('customers_id');
-    $tplogger->setOrder($order_id);
-
-    return $tplogger->getLogger(true);
+function getCustomerId($order) {
+    global $db;
+    if (isset($_SESSION['customer_id'])) {
+        return $_SESSION['customer_id'];
+    }
+    if (is_object($order)) {
+        $gv_check = $db->Execute("select customers_id from " . TABLE_CUSTOMERS
+            . " where customers_email_address = '" . $order->fields['customers_email_address']."'"
+        );
+        $_SESSION['customer_id'] = $gv_check->fields['customers_id'];
+        return $_SESSION['customer_id'];
+    }
 }
-
-function callGAA($order_id) {
-
-    $dataGAA = _recollect_data($order_id);
+function showError() {
+    global $messageStack;
+    $messageStack->add_session('header','No se pudo realizar la acción, intente nuevamente.', 'error');
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+}
+function _recollect_data($order) {
+    global $todopagoTransaccion;
+    $config = getTpConfig();
+    $order_id = $order->fields['orders_id'];
+    if (empty($config)) {
+        return $config;
+    }
+    if ($order_id !== null && $todopagoTransaccion->_getStep($order_id) == TodopagoTransaccion::SECOND_STEP) {
+        
+        $config['order_id'] = $order_id;
+        $logger = loggerFactory::createLogger(
+            true,
+            $config['ambiente'],
+            getCustomerId($order),
+            $order_id
+        );
+        $logger->info("second step");
+        $logger->debug('todoPagoConfig: '.json_encode($config));
+        if (empty($config['ambiente'])) {
+            $logger->error("FALTA CONFIGURAR PLUGIN TODOPAGO");
+            showError();
+        }
+        $modo = $config["ambiente"]."_";
+        $http_header = json_decode($config["authorization"],1);
+        $http_header["user_agent"] = 'PHPSoapClient';
+        $security_code = isset($config[$modo."security"]) ? $config[$modo."security"] : '';
+        $merchant = isset($config[$modo."merchant"]) ? $config[$modo."merchant"] : '';
+        $connector = new Sdk($http_header, ($config["ambiente"] == 'test') ? 'test' : 'prod');
+        $optionsGS = array('MERCHANT' => $config[$modo."merchant"], 'OPERATIONID' => $order_id);
+        $transaction = $todopagoTransaccion->getTransaction($order_id);
+        $requestKey = $transaction['request_key'];
+        $answerKey = $_GET['Answer'];
+        $optionsGAA = array (
+            'Security'   => $security_code,
+            'Merchant'   => $merchant,
+            'RequestKey' => $requestKey,
+            'AnswerKey'  => $answerKey
+        );
+        return compact('connector', 'optionsGS', 'optionsGAA', 'logger', 'config');
+    }
+    $logger->warn("No se puede entrar al second step porque ya se ha registrado una entrada exitosa en la tabla todopago_transaccion o el Order id no ha llegado correctamente");
+    showError();
+}
+function callGAA($order) {
+    $dataGAA = _recollect_data($order);
     if(empty($dataGAA)) {
         return false;
     }
-
     $logger = $dataGAA['logger'];
     $connector = $dataGAA['connector'];
-
-    $logger->info('second step');
     $logger->info("params GAA: ".json_encode($dataGAA['optionsGAA']));
-    $rta2 = $connector->getAuthorizeAnswer($dataGAA['optionsGAA']);
+    
+    try {
+        $rta2 = $connector->getAuthorizeAnswer($dataGAA['optionsGAA']);
+    } catch (Exception $e) {
+        $logger->error(json_encode($e));
+        showError();
+    }
     $logger->info("response GAA: ".json_encode($rta2));
-
-    return array('rta' => $rta2, 'logger' => $logger, 'config' => $dataGAA['config']);
+    return array('rta' => $rta2, 'logger' => $logger, 'config' => $dataGAA['config'], 'optionsGAA' => $dataGAA['optionsGAA']);
 }
-
 function take_action($data) {
-    global $db;
+    global $db, $todopagoTransaccion;
     if ($data['rta']['StatusCode'] == TP_STATUS_OK) {
-        $anwer = $data['rta']['Payload']['Answer'];
-        if ($anwer['PAYMENTMETHODNAME'] == 'PAGOFACIL' || $anwer['PAYMENTMETHODNAME']== 'RAPIPAGO' ) {
-            $db->Execute('UPDATE '.TABLE_ORDERS.' SET orders_status = '.$data['config']['estado_rechazada'].' WHERE orders_id = '.$data['config']['order_id']);
-        }
-        else{
+        $todopagoTransaccion->recordSecondStep($data['config']['order_id'], $data['optionsGAA'], $data['rta']);
+        $answer = $data['rta']['Payload']['Answer'];
+        if ($answer['PAYMENTMETHODNAME'] == 'PAGOFACIL' || $answer['PAYMENTMETHODNAME']== 'RAPIPAGO' ) {
+            $db->Execute('UPDATE '.TABLE_ORDERS.' SET orders_status = '.$data['config']['estado_offline'].' WHERE orders_id = '.$data['config']['order_id']);
+            if (empty($answer['ASSOCIATEDDOCUMENTATION'])) {
+                $data['logger']->warn('No se mando la url del CUPON para el metodo de pago '. $answer["PAYMENTMETHODNAME"]);
+            }
+            $url = $answer['ASSOCIATEDDOCUMENTATION'];
+            include zen_get_file_directory(DIR_FS_CATALOG.DIR_WS_TEMPLATES.'template_default/templates/', 'tpl_checkout_offline_todopago_default');
+        } else {
             $db->Execute('UPDATE '.TABLE_ORDERS.' SET orders_status = '.$data['config']['estado_aprobada'].' WHERE orders_id = '.$data['config']['order_id']);
+            
+            echo '<h1 id="checkoutSuccessHeading">Muchas gracias por tu compra</h1>
+            <div id="checkoutSuccessOrderNumber">Tu nro de orden es: ' . $data['config']['order_id'] . '</div>
+            <div id="checkoutSuccessMainContent" class="content">
+                <label>Gracias por pagar con TodoPago!</label>
+            </div>';
         }
-
-        echo '<h1 id="checkoutSuccessHeading">Muchas gracias por tu compra</h1>
-        <div id="checkoutSuccessOrderNumber">Tu nro de orden es: ' . $data['config']['order_id'] . '</div>
-        <div id="checkoutSuccessMainContent" class="content">
-            <label>Gracias por pagar con TodoPago!</label>
-        </div>';
-
     } else {
         echo "<label>No se ha podido realizar el pago, por favor intente nuevamente.</label>";
     }
 }
-
-
-
-function second_step_todopago($order_id) {
-
-    $response = callGAA($order_id);
+function second_step_todopago($order) {
+    global $todopagoTransaccion;
+    $todopagoTransaccion = new TodopagoTransaccion();
+    $response = callGAA($order);
     if($response) {
         take_action($response);
     } else {
-        echo 'No se pudo realizar la acción, consulte con el administrador.';
+        showError();
     }
 }
-
-$logo = HTTP_SERVER.''.DIR_WS_CATALOG.'includes/modules/payment/todopago/includes/todopago.jpg';
-$order_id = $orders->fields['orders_id'];
-
-second_step_todopago($order_id);
-
-
+second_step_todopago($orders);
+$logo = "http://www.todopago.com.ar/sites/todopago.com.ar/files/pluginstarjeta.jpg";
 unset($_SESSION['sendto']);
 unset($_SESSION['billto']);
 unset($_SESSION['shipping']);
@@ -150,18 +162,17 @@ $_SESSION['cart']->reset(true);
         </div>
         <?php
     }
-
     echo "<img width='350px' src='".$logo."' />";
     ?>
 
     <!-- bof payment-method-alerts -->
     <?php
     if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_messages'] != '') {
-    ?> 
+        ?>
         <div class="content">
             <?php echo $_SESSION['payment_method_messages']; ?>
         </div>
-    <?php
+        <?php
     }
     ?>
     <!-- eof payment-method-alerts -->

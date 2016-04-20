@@ -135,6 +135,7 @@ abstract class ControlFraude {
 		foreach($this->order->products as $item){
 			
 			$product_id = current(explode(":",$item['id']));
+
 			global $db;
 		    $sql = "SELECT cd.categories_name 
 					FROM ".TABLE_CATEGORIES_DESCRIPTION." cd 
@@ -146,7 +147,23 @@ abstract class ControlFraude {
 
 			$productcode_array[] = $row['categories_name'] ?: 'default';
 
-			$description_array[] = $item['name'];
+			//get product description for CSITPRODUCTDESCRIPTION
+			$sql = "SELECT products_description as description FROM ".TABLE_PRODUCTS_DESCRIPTION ." WHERE products_id = ".$product_id;
+        	$resDescript = $db->Execute($sql);
+        	$rowDesc = $resDescript->fields;
+
+        	if(isset($rowDesc['description']) && trim($rowDesc['description']) != '' ) {
+        		$_description = trim($rowDesc['description']);
+				$_description = substr($_description, 0,40);
+				$_description = str_replace("'"," ",$_description); // quito la comilla simple
+				$_description = strip_tags($_description); // retiro tags html
+				$description_array [] = utf8_encode(str_replace("#","",$_description));
+        	}else{
+        		$_description = str_replace("'"," ",$item['name']); // quito la comilla simple
+        		$_description = strip_tags($_description);
+        		$description_array[] = utf8_encode($_description);
+        	}
+			
 			$name_array[] = $item['name'];
 			$sku_array[] = empty($item['model']) ? $product_id : $item['model'];
 			$product_price = number_format($item['price'], 2, ".", "");
@@ -199,4 +216,4 @@ abstract class ControlFraude {
 
 	protected abstract function completeCFVertical();
 
-}
+} 

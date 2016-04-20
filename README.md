@@ -6,6 +6,7 @@ Plug in para la integración con gateway de pago <strong>Todo Pago</strong>
 - [Consideraciones Generales](#consideracionesgenerales)
 - [Instalación](#instalacion)
 - [Configuración plugin](#confplugin)
+- [Obtener credenciales](#obtenercredenciales)
 - [Devoluciones] (#devoluciones)
 - [Datos adiccionales para prevención de fraude](#cybersource) 
 - [Tablas de referencia](#tablas)
@@ -52,6 +53,18 @@ Para las devoluciones se debe agregar los estados "Refund" y "Partial Refund", d
 ![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/todopago-transacciones.png)
 [<sub>Volver a inicio</sub>](#inicio)
 
+
+<a name="obtenercredenciales"></a>
+#Obtener crendenciales
+Se puede obtener los datos de configuracion del plugin con solo loguearte con tus credenciales de Todopago. </br>
+a. Ir a la opcion Obtener credenciales
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/obtenercredenciales_1.png)
+b. En el popup loguearse con el mail y password de Todopago.
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/obtenercredenciales_2.png)
+c. Los datos se cargaran automaticamente en los campos Merchant ID y Security code en el ambiente correspondiente (Desarrollo o produccion ) y solo hay que hacer click en el boton guardar datos y listo.
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/obtenercredenciales_3.png)
+
+
 <a name="devoluciones"></a>
 ## Devoluciones
 TodoPago permite realizar la devolucion total o parcial de dinero de una orden de compra.<br> 
@@ -79,44 +92,5 @@ Este es un ejemplo de la mayoría de los campos que se necesitan para comenzar l
 'CSBTPOSTALCODE'=> $cart->customer['postcode'], 	
 'CSBTSTATE' => $this->tp_states, 
 'CSBTSTREET1' => $cart->customer['street_address'] ,	
-
-[<sub>Volver a inicio</sub>](#inicio)
-
-<a name="tablas"></a>
-## Tablas de Referencia
-######[Provincias](#p)
-
-<a name="p"></a>
-<p>Provincias</p>
-<table>
-<tr><th>Provincia</th><th>Código</th></tr>
-<tr><td>CABA</td><td>C</td></tr>
-<tr><td>Buenos Aires</td><td>B</td></tr>
-<tr><td>Catamarca</td><td>K</td></tr>
-<tr><td>Chaco</td><td>H</td></tr>
-<tr><td>Chubut</td><td>U</td></tr>
-<tr><td>Córdoba</td><td>X</td></tr>
-<tr><td>Corrientes</td><td>W</td></tr>
-<tr><td>Entre Ríos</td><td>R</td></tr>
-<tr><td>Formosa</td><td>P</td></tr>
-<tr><td>Jujuy</td><td>Y</td></tr>
-<tr><td>La Pampa</td><td>L</td></tr>
-<tr><td>La Rioja</td><td>F</td></tr>
-<tr><td>Mendoza</td><td>M</td></tr>
-<tr><td>Misiones</td><td>N</td></tr>
-<tr><td>Neuquén</td><td>Q</td></tr>
-<tr><td>Río Negro</td><td>R</td></tr>
-<tr><td>Salta</td><td>A</td></tr>
-<tr><td>San Juan</td><td>J</td></tr>
-<tr><td>San Luis</td><td>D</td></tr>
-<tr><td>Santa Cruz</td><td>Z</td></tr>
-<tr><td>Santa Fe</td><td>S</td></tr>
-<tr><td>Santiago del Estero</td><td>G</td></tr>
-<tr><td>Tierra del Fuego</td><td>V</td></tr>
-<tr><td>Tucumán</td><td>T</td></tr>
-</table>
-
-####Muy Importante
-Provincias: Al ser un campo MANDATORIO para enviar y propio del plugin este campo se completa por parte del usuario al momento del check out.
 
 [<sub>Volver a inicio</sub>](#inicio)
