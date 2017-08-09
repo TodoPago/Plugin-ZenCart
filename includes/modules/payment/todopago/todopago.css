@@ -1,15 +1,16 @@
-.secciones-todopago-config{
-    list-style:none;
-    display:table;
+.secciones-todopago-config {
+    list-style: none;
+    display: table;
     margin-bottom: 50px;
     width: 100%;
 }
-.secciones-todopago-config li{
-    float:left;
-    padding:10px;
-    margin-right:5px;
+
+.secciones-todopago-config li {
+    float: left;
+    padding: 10px;
+    margin-right: 5px;
     border: 1px solid #d3d3d3;
-    border-bottom:none;
+    border-bottom: none;
     border-radius: 3px;
     padding-bottom: 0px;
     width: 150px;
@@ -18,46 +19,56 @@
     font-weight: bold;
 }
 
-#config{
+#config {
     padding-left: 42px;
 }
 
-#prod{
+#prod {
     padding-left: 42px;
 }
 
-#orden{
+#orden {
     padding-left: 42px;
 }
 
-#config input[type="text"]{
-    margin-bottom: 15px;    
+#config input[type="text"] {
+    margin-bottom: 15px;
 }
 
-#config select{
-    margin-bottom: 15px;   
+#config select {
+    margin-bottom: 15px;
 }
-.input-todopago{
+
+.input-todopago {
     display: table;
     width: 600px;
 }
 
-.input-todopago label{
+.input-todopago label {
     width: 290px;
     display: block;
     float: left;
 }
 
-.subtitulo-todopago{
+.input-todopago-campos{
+    margin-bottom: 8px;
+    float: left;
+}
+
+.input-todopago-campos input{
+    margin-bottom: 8px;
+}
+
+.subtitulo-todopago {
     background-color: #D3D3D3;
     width: 210px;
     text-align: center;
     padding: 3px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
-#config-producto-todopago{
-    display:none;
+#config-producto-todopago {
+    display: none;
     position: fixed;
     top: 50%;
     background-color: rgb(223, 239, 252);
@@ -71,8 +82,8 @@
     color: #2E6E9E;
 }
 
-#status-orders{
-    display:none;
+#status-orders {
+    display: none;
     position: fixed;
     top: 30%;
     background-color: rgb(223, 239, 252);
@@ -86,8 +97,8 @@
     color: #2E6E9E;
 }
 
-#refund-dialog{
-    display:none;
+#refund-dialog {
+    display: none;
     position: fixed;
     top: 30%;
     background-color: rgb(223, 239, 252);
@@ -101,20 +112,48 @@
     color: #2E6E9E;
 }
 
-#guardar{
-    float:right;
+#amount-div {
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
-.editar{
-    cursor:pointer;
+#amount-input {
+    text-align: right;
+    margin-top: 5px;
+    height: 15px;
+    width: 150px;
 }
 
-#config-producto-todopago #titulo{
+#refund-button-div {
+    text-align: center;
+}
+
+#amount-warning {
+    text-align: center;
+    width: 200px;
+    margin-top: 5px;
+}
+
+#invalid-amount-message {
+    text-align: center;
+    color: red;
+    margin-top: 5px;
+}
+
+#guardar {
+    float: right;
+}
+
+.editar {
+    cursor: pointer;
+}
+
+#config-producto-todopago #titulo {
     font-size: 16px;
     font-weight: bold;
 }
 
-.close-todopago{
+.close-todopago {
     border-radius: 10px;
     position: absolute;
     right: 10px;
@@ -123,7 +162,7 @@
     font-size: 12px;
 }
 
-.close-status-todopago{
+.close-status-todopago {
     border-radius: 10px;
     position: absolute;
     right: 10px;
@@ -136,7 +175,7 @@
     margin-top: 15px;
 }
 
-.close-pop-up{
+.close-pop-up {
     border-radius: 10px;
     position: absolute;
     right: 10px;
@@ -145,7 +184,7 @@
     font-size: 12px;
 }
 
-.btn-config-credentials{
+.btn-config-credentials {
     font-size: 13px;
     vertical-align: top;
     line-height: 25px;
@@ -154,25 +193,32 @@
     font-weight: 400;
     text-align: center;
     cursor: pointer;
-    color: rgb(255, 255, 255); 
-    background-color:rgb(230, 0, 126); 
-    width:170px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(230, 0, 126);
+    width: 170px;
     border-radius: 4px;
 }
+
 .ui-dialog-titlebar {
     background: rgb(230, 0, 126);
     border-color: #E6E6E6;
 }
-.ui-icon{ background color: rgb(230, 0, 126); }
-.ui-dialog {  
+
+.ui-icon {
+    background-color: rgb(230, 0, 126);
+}
+
+.ui-dialog {
     min-width: 351px;
     border-color: #D8D8D8;
     border-radius: 4px;
-    background-color: rgba(255,255,255,.9);
+    background-color: rgba(255, 255, 255, .9);
 }
+
 .control-label {
     font-size: 16px;
 }
+
 .form-control {
     display: block;
     width: 270px;
@@ -185,7 +231,7 @@
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }

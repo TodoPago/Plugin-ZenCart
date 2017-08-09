@@ -1,54 +1,53 @@
 <?php
-	require_once(dirname(__FILE__).DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."payment".DIRECTORY_SEPARATOR."todopago".DIRECTORY_SEPARATOR."includes".DIRECTORY_SEPARATOR."TodopagoTransaccion.php");
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . "payment" . DIRECTORY_SEPARATOR . "todopago" . DIRECTORY_SEPARATOR . "includes" . DIRECTORY_SEPARATOR . "TodopagoTransaccion.php");
+global $messageStack;
+if (isset($_GET['id'])) {
+    global $customer_id;
 
-	if(isset($_GET['id'])){
-		global $customer_id;
+    $resultConfig = $db->Execute('SELECT * FROM todo_pago_configuracion');
 
-		$resultConfig = $db->Execute('SELECT * FROM todo_pago_configuracion');
+    //set url form js
+    $endpoint = "";
+    $ambiente = $resultConfig->fields['ambiente'];
 
-		//set url form js
-		$endpoint = "";
-		$ambiente = $resultConfig->fields['ambiente'];
+    //set url external form library
+    $library = "resources/TPHybridForm-v0.1.js";
 
-		//set url external form library
-		$library = "resources/TPHybridForm-v0.1.js";
-		  
-		if($ambiente == "test"){
-		  // developers	
-		  $endpoint = "https://developers.todopago.com.ar/";
-		}else{
-			// produccion
-			$endpoint = "https://forms.todopago.com.ar/";  
-		}
+    if ($ambiente == "test") {
+        // developers
+        $endpoint = "https://developers.todopago.com.ar/";
+    } else {
+        // produccion
+        $endpoint = "https://forms.todopago.com.ar/";
+    }
 
-		$endpoint .= $library;
-		$orderId = $_GET['id'];
+    $endpoint .= $library;
+    $orderId = $_GET['id'];
 
-		//RequestKey
-		$tpTransaccion = new TodopagoTransaccion();
-    	$response = $tpTransaccion->getTransaction($orderId);		
-		$publicKey= $response['public_request_key'];
+    //RequestKey
+    $tpTransaccion = new TodopagoTransaccion();
+    $response = $tpTransaccion->getTransaction($orderId);
+    $publicKey = $response['public_request_key'];
 
-		//orderID*/
-		$orderId = $_GET['id'];
-		
-		//merchatid
-        $merchantId = $resultConfig->fields['test_merchant'];
-        
-	    require('includes/classes/order.php');
-	    $order = new order($orderId);
+    //orderID*/
+    $orderId = $_GET['id'];
 
-	    //name
-	    $user = $order->customer['name'];
-	    
-		//email
-		$mail = $order->customer['email_address'];
-	}else{
+    //merchatid
+    $merchantId = $resultConfig->fields['test_merchant'];
+    require('includes/classes/order.php');
+    $order = new order($orderId);
 
-		$url = str_replace("&amp;", "&", zen_href_link('checkout_payment', '', 'SSL'));
-        header('Location:'.$url);
-        die;
-	}
+    //name
+    $user = $order->customer['name'];
+
+    //email
+    $mail = $order->customer['email_address'];
+} else {
+
+    $url = str_replace("&amp;", "&", zen_href_link('checkout_payment', '', 'SSL'));
+    header('Location:' . $url);
+    die;
+}
 
 ?>
 <html>
@@ -56,11 +55,11 @@
 		<title>Formulario Híbrido</title>
 		<meta charset="UTF-8">
 		<script src="<?php echo $endpoint ?>"></script>
-		<link rel="stylesheet" type="text/css" href="includes/modules/payment/todopago/form_todopago.css">
+		<link rel="stylesheet" type="text/css" href="includes/modules/payment/todopago/formulario_tp.css">
 		<script type="text/javascript">
 
 			$(document).ready(function() {
-				
+
 				$("#formaDePagoCbx").change(function () {
 				    if(this.value == 500 || this.value == 501){
 				    	$(".spacer").hide();
@@ -83,7 +82,7 @@
 			<div id="tp-content-form">
 				<span class="tp-label">Elegí tu forma de pago </span>
 				<div>
-					<select id="formaDePagoCbx"></select>	
+					<select id="formaDePagoCbx"></select>
 				</div>
 				<div>
 					<select id="bancoCbx"></select>
@@ -92,6 +91,10 @@
 					<select id="promosCbx" class="left"></select>
 					<label id="labelPromotionTextId" class="left tp-label"></label>
 					<div class="clear"></div>
+				</div>
+				<div>
+					<label id="labelPeiCheckboxId"></label>
+					<input id="peiCbx"/>
 				</div>
 				<div>
 					<input id="numeroTarjetaTxt"/>
@@ -114,16 +117,21 @@
 					<select id="tipoDocCbx"></select>
 				</div>
 				<div>
-					<input id="nroDocTxt"/>	
+					<input id="nroDocTxt"/>
 				</div>
 				<div>
 					<input id="emailTxt"/><br/>
 				</div>
-				<div id="tp-bt-wrapper">
-					<button id="MY_btnConfirmarPago" />
-        			<button id="btnConfirmarPagoValida" class="tp-button">Pagar</button>
+				<div class="pei-box">
+					<input id="peiTokenTxt"/>
+					<label id="labelPeiTokenTextId"></label>
 				</div>
-			</div>	
+				<div id="tp-bt-wrapper">
+					<button id="MY_btnConfirmarPago" />Pagar</button>
+					<button id="btn_Billetera" />Billetera</button>
+				</div>
+			</div>
+
 		</div>
 
 	</body>
@@ -137,12 +145,12 @@
 	    paramOrderResult = <?php echo $orderId ?>;
 	    paramAnswer = "&Answer=";
 	    url = origin+urlOri+index+page+paramOrder+paramOrderResult+paramAnswer;
+	    validatorMessageList = [];
 
 		/************* CONFIGURACION DEL API ************************/
 		window.TPFORMAPI.hybridForm.initForm({
 			callbackValidationErrorFunction: 'validationCollector',
 			callbackBilleteraFunction: 'billeteraPaymentResponse',
-			botonPagarConBilleteraId: 'MY_btnPagarConBilletera',
 			modalCssClass: 'modal-class',
 			modalContentCssClass: 'modal-content',
 			beforeRequest: 'initLoading',
@@ -150,9 +158,10 @@
 			callbackCustomSuccessFunction: 'customPaymentSuccessResponse',
 			callbackCustomErrorFunction: 'customPaymentErrorResponse',
 			botonPagarId: 'MY_btnConfirmarPago',
+			botonPagarConBilleteraId: 'btn_Billetera',
 			codigoSeguridadTxt: 'Codigo',
 		});
-		
+
 		window.TPFORMAPI.hybridForm.setItem({
 		    publicKey: $('#security').attr("data-securityKey"),
 	        defaultNombreApellido: $('#user').attr("data-user"),
@@ -160,9 +169,9 @@
 	        defaultTipoDoc: 'DNI'
 		});
 		//callbacks de respuesta del pago
-		function validationCollector(response) {
-			var errorMessage = "<div class='messageStackError'><img src='includes/templates/template_default/images/icons/error.gif' alt='Error' title='Error'>"+response.error+"</div>";
-      		        $("#validationMessage").append(errorMessage);
+		function validationCollector(response) {    
+      			validatorMessageList.push(response.error);
+	        	renderErrorMessage();        
 		}
 		function billeteraPaymentResponse(response) {
 			window.location.href = url+response.AuthorizationKey;
@@ -171,18 +180,28 @@
 			window.location.href = url+response.AuthorizationKey;
 		}
 		function customPaymentErrorResponse(response) {
-			window.location.href = url;
+			window.location.href = url+response.AuthorizationKey;
 		}
 		function initLoading() {
 		}
 		function stopLoading() {
 		}
 
+		function renderErrorMessage(){
+			content = "<div class='messageStackError' style='margin-bottom:5px;'><img src='includes/templates/template_default/images/icons/error.gif' alt='Error' title='Error'><div class='content'><ul>";
+			for (i = 0; i < validatorMessageList.length; i++) { 	
+				content += "<li>"+validatorMessageList[i]+"</li>";
+			}
+			content += "</ul></div></div>";
+
+			$("#validationMessage").empty(content);
+			$("#validationMessage").append(content);
+		}
+		
 		$( document ).ready(function() {
-	           $("#btnConfirmarPagoValida").on("click", function(){
-	           $('.messageStackError').remove();
-	           $('#MY_btnConfirmarPago').click();
-	      });
+	           $("#MY_btnConfirmarPago").on("click", function(){
+		           validatorMessageList = [];
+		      });
 	    });
 	</script>
 </html>

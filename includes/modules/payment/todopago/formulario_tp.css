@@ -1,9 +1,9 @@
 #tp-form-tph{
-	/*border:1px solid #000;*/
 	margin:5px 0 0 0;
 }
 #tp-form-tph input, #tp-form-tph select {
 	display: block;
+	border:1px solid #ccc;
 	margin:8px 0px 0px 13px;
 	height: 25px;
 }
@@ -21,13 +21,14 @@
 	padding: 2px 5px 2px 5px;
 }
 #tp-logo{
-	background-image: url("includes/tp_logo.png");
+	background-image: url("includes/logo_tp.png");
 	background-repeat: no-repeat;
 	height:40px;
 	width:110px;
 	margin: 0 0 0 14px;
 }
 #tp-content-form{
+	border:0px;
 	padding: 11px 0;
 	/*width:300px;*/
 	margin: 2px 0 0;
@@ -42,7 +43,7 @@
 }
 
 #codigoSeguridadTxt{
-	width:36px;
+	width:60px;
 }
 
 .left{
@@ -56,4 +57,7 @@
 }
 .tp-label{
 	margin:12px 0 0 10px;
+}
+#MY_btnConfirmarPago{
+	margin:0 5px 0 0;
 }
