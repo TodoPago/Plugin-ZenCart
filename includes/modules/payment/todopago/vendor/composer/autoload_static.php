@@ -9,11 +9,16 @@ class ComposerStaticInitae2fdf462851133c0e0fad0fe015a543
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
+            'TodoPago\\Test\\' => 14,
             'TodoPago\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'TodoPago\\Test\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/todopago/php-sdk/TodoPago/test',
+        ),
         'TodoPago\\' => 
         array (
             0 => __DIR__ . '/..' . '/todopago/php-sdk/TodoPago/lib',

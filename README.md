@@ -13,6 +13,7 @@ Plug in para la integración con gateway de pago <strong>Todo Pago</strong>
   - [Devoluciones](#devoluciones)
   - [Datos adiccionales para prevención de fraude](#cybersource) 
   - [Tiempo de vida del formulario](#temform)
+  - [Validación de datos con Google Maps](#gmapsdatos)
 - [Tablas de referencia](#tablas)
 - [Tabla de errores](#codigoerrores)
 - [Versiones disponibles](#availableversions)
@@ -76,9 +77,9 @@ a. Ir a la opcion Obtener credenciales<br>
 
 <a name="formHibrido"></a>
 #### Formulario Hibrido
-En la configuracion del plugin tambien estara la posibilidad de mostrarle al cliente el formulario de pago de TodoPago integrada en el sitio. 
+En la configuracion del plugin tambien estara la posibilidad de mostrarle al cliente el formulario de pago de TodoPago integrada en el sitio.
 Para esto , en la configuracion se debe seleccionar el campo formulario integrado al e-commerce:
-![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/formHib1.png)
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/todopago_maxcuotas_2_forms.png)
 <sub></br>Del lado del cliente el formulario se vera asi:</br></sub>
 ![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/formHib2.png)
 </br>
@@ -91,11 +92,19 @@ El formulario tiene dos formas de pago, ingresando los datos de una tarjeta ó u
 <a name="temform"></a>
 #### Tiempo de vida del formulario
 
-En la configuracion del formulario se puede definir el tiempo de duración que el formulario de pago permanecerá activo. El valor permitido es de tipo numerico entero en milisegundos entre un rango de tiempo de 300000 (5 minutos) y 21600000 (6hs).
+En la configuración del formulario se puede definir el tiempo de duración que el formulario de pago permanecerá activo. El valor permitido es de tipo numerico entero en milisegundos entre un rango de tiempo de 300000 (5 minutos) y 21600000 (6hs).
 Si no se envia este campo, por defecto el formulario vivira 1800000 (30 minutos).  
 
 [<sub>Volver a inicio</sub>](#inicio)
 
+<a name="temform"></a>
+#### Validación de datos con Google Maps
+
+Se pueden normalizar los datos de facturación y entrega usados al momento de realizar la compra. El plugin envía a Google Maps los datos ingresados por el usuario y corrige con la información devuelta. Las correcciones más habituales que realiza son, por ejemplo, del código postal y del nombre de la ciudad. En caso de que Google no encuentre la dirección ingresada, se registra como warn en el log de TodoPago incluyendo la información que el usuario cargó.
+
+Esta validación es optativa y puede ser configurada desde el menú de configuración de TodoPago.
+
+[<sub>Volver a inicio</sub>](#inicio)
 
 <a name="features"></a>
 ## Caracteristicas

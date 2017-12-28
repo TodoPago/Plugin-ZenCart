@@ -7,8 +7,8 @@ include_once '../../vendor/autoload.php';
 define('MERCHANT', 35);
 define('SECURITY', '0129b065cfb744718166913eba827a2f');
 $rk = $_COOKIE['RequestKey'];
-$ak = $_GET['Answer'];
-$operationid = $_GET['operationid'];
+$ak = strip_tags($_GET['Answer']);
+$operationid = strip_tags($_GET['operationid']);
 
 $optionsGAA = array (     
         'Security'   => SECURITY,      
@@ -27,7 +27,7 @@ $connector = new Sdk($http_header, "test");
 $rta2 = $connector->getAuthorizeAnswer($optionsGAA);
 
 if ($rta2['StatusCode']== -1){
-	echo "<h2>OPERACION :".$_GET['operationid']." exitosa</h2>";
+	echo "<h2>OPERACION :".htmlspecialchars($operationid)." exitosa</h2>";
 }else{
 	header("location: error.php?operationid=$operationid");
 }

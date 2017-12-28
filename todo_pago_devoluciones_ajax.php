@@ -1,4 +1,5 @@
 <?php
+
 use TodoPago\Sdk as Sdk;
 
 require('includes/application_top.php');
@@ -22,12 +23,13 @@ if ($order_id != null && $refund_type != null) {
     $http_header = json_decode($config["authorization"], 1);
     $http_header["user_agent"] = 'PHPSoapClient';
 
-        $tplogger = loggerFactory::createLogger(
-            false,
-            $config['ambiente'],
-	    null,
-            $order_id
-        );
+    $tplogger = loggerFactory::createLogger(
+        false,
+        $config['ambiente'],
+        null,
+        $order_id
+    );
+
 
     $connector = new Sdk($http_header, ($config["ambiente"] == 'test') ? 'test' : 'prod');
 
@@ -47,22 +49,22 @@ if ($order_id != null && $refund_type != null) {
             "RequestKey" => $requestKey
         );
 
-	$tplogger->info("Devolucion total");
-		$tplogger->info("Parametros: " . json_encode($options));
-		$voidResponse = $connector->voidRequest($options);
-		$tplogger->info("Respuesta: " . json_encode($voidResponse));
+        $tplogger->info("Devolucion total");
+        $tplogger->info("Parametros: " . json_encode($options));
+        $voidResponse = $connector->voidRequest($options);
+        $tplogger->info("Respuesta: " . json_encode($voidResponse));
 
         if ($voidResponse['StatusCode'] == 2011) {
 
             //Id status Total Refund
-            $sql = "SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Refund'";
+            $sql = "SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_name = 'Refund'";
             $response = $db->Execute($sql);
             $new_order_status = $response->fields['orders_status_id'];
 
             if ($new_order_status == 0) $new_order_status = 1;
 
             //get void total
-            $sql = "SELECT * FROM " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'";
+            $sql = "SELECT * FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$order_id . "'";
             $response = $db->Execute($sql);
             $todoPagoVoid = $response->fields;
 
@@ -98,14 +100,14 @@ if ($order_id != null && $refund_type != null) {
         if ($amount > $amountGAA)
             $response = "La devolución no puede ser mayor al valor real de la orden.";
         else {
-		$tplogger->info("Devolucion parcial");
-		$tplogger->info("Parametros: " . json_encode($options));
-		$refResponse = $connector->returnRequest($options);
-		$tplogger->info("Respuesta: " . json_encode($refResponse));
+            $tplogger->info("Devolucion parcial");
+            $tplogger->info("Parametros: " . json_encode($options));
+            $refResponse = $connector->returnRequest($options);
+            $tplogger->info("Respuesta: " . json_encode($refResponse));
             if ($refResponse['StatusCode'] == 2011) {
 
                 //Id status Total Refund
-                $sql = "SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Partial Refund'";
+                $sql = "SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_name = 'Partial Refund'";
                 $response = $db->Execute($sql);
                 $new_order_status = $response->fields['orders_status_id'];
 
@@ -135,5 +137,5 @@ if ($order_id != null && $refund_type != null) {
 
     $response = "No se pudo realizar la operacion, se requiere id y monto de la orden";
 }
-echo ($response);
+echo($response);
 ?>

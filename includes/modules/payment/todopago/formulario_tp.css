@@ -1,63 +1,197 @@
-#tp-form-tph{
-	margin:5px 0 0 0;
+/* Hoja de estilo del formulario hÃ­brido */
+@keyframes barFill {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
 }
-#tp-form-tph input, #tp-form-tph select {
-	display: block;
-	border:1px solid #ccc;
-	margin:8px 0px 0px 13px;
-	height: 25px;
+
+
+
+.formuHibrido {
+    width: 100%;
 }
+
+.formuHibrido button {
+    margin: 5px;
+}
+
+.advertencia {
+    color: red;
+    padding: 1px;
+    background-color: white;
+    font-size: 1em;
+}
+
+.progress {
+    height: 40px;
+    width: 100%
+}
+
+.fail {
+    background-color: lightpink;
+    border-color: red;
+}
+
+.input {
+    margin: auto;
+    height: 40px;
+    background: #F8F8F8;
+    border: 1px solid #CCCCCC;
+    width: 100% !important;;
+}
+
+input {
+    font-size: medium
+}
+
 .modal-class {
-
 }
+
 .modal-content {
-
-}
-#tp-bt-wrapper{
-	margin:0px 0px 0px 9px;
-}
-.tp-button{
-	margin:2px 4px 2px 3px;
-	padding: 2px 5px 2px 5px;
-}
-#tp-logo{
-	background-image: url("includes/logo_tp.png");
-	background-repeat: no-repeat;
-	height:40px;
-	width:110px;
-	margin: 0 0 0 14px;
-}
-#tp-content-form{
-	border:0px;
-	padding: 11px 0;
-	/*width:300px;*/
-	margin: 2px 0 0;
 }
 
-#tp-content-form .dateFields input{	
-	width:41px;
+.advertencia {
+    z-index: 100;
 }
 
-.dateFields .spacer{	
-	margin: 10px -4px 0px 7px;
+#todopago_logo {
+    width: 110px;
+    height: 40px
 }
 
-#codigoSeguridadTxt{
-	width:60px;
+#tpForm {
+    width: 100%;
+    opacity: 0;
 }
 
-.left{
-	float:left;
+#peiLbl {
+    line-height: 0.9em !important;
+    width: 100%;
 }
-.right{
-	float:right;
+
+.pei-cbx input{
+    float: right;
+    clear: both;
+    width: 20px !important;
 }
-.clear{
-	clear:both;
+
+#peiCbx{
+
 }
-.tp-label{
-	margin:12px 0 0 10px;
+
+#loading-hibrid {
+    border-radius: 0 5px 5px 0;
+    background-color: rgb(244, 0, 122);
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(244, 180, 122, .5) 35px, rgba(244, 200, 122, .5) 70px);
+    width: 0;
+    animation-name: barFill;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    height: 100%;
 }
-#MY_btnConfirmarPago{
-	margin:0 5px 0 0;
+
+.row, .static-row {
+    height: 60px;
+    width: 100%;
+    margin-bottom: 11px;
+}
+
+.bloque-full {
+    flex: 1;
+}
+
+.bloque-small {
+    flex: 1;
+}
+
+.bloque-medium {
+    flex: 2;
+}
+
+.bloque-big {
+    flex: 3;
+}
+
+.bloque {
+    margin: 0 0 0 10px;
+    padding: 1px;
+    height: 60px;
+}
+
+.left-col, .right-col{
+    width: 49%;
+}
+
+.left-col {
+    flex-direction: row;
+    justify-content: space-between;
+    display: inline-flex;
+}
+
+.right-col {
+    float: right;
+    right: 0;
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.loaded-form {
+    display: none
+}
+
+#row-pei {
+    display: none;
+    margin-bottom: 60px;
+    margin-top: -15px;
+}
+
+
+
+.button-primary:enabled {
+    color: white;
+    background-color: rgb(5, 165, 203);
+    background-image: none;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-position-x: 0;
+    background-position-y: 0;
+    background-size: auto auto;
+}
+
+#promos-row, #botonera-row {
+    height: 30px;
+}
+
+#codigo-col {
+
+}
+
+#tokenpei-row, #tokenpei-bloque {
+    height: 0;
+}
+
+input, select {
+    box-sizing: border-box;
+}
+
+@media only screen and (orientation: portrait) {
+    .left-col, .right-col {
+        width: 100%;
+        max-height: 55px !important;
+    }
+
+    .row {
+        height: 120px !important;
+        margin-bottom: 20px !important;
+        width: 95%;
+    }
+
+    .row-pei {
+        height: 100px
+    }
 }

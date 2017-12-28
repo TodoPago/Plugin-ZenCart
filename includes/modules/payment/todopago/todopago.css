@@ -1,3 +1,12 @@
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(720deg);
+    }
+}
+
 .secciones-todopago-config {
     list-style: none;
     display: table;
@@ -35,6 +44,20 @@
     margin-bottom: 15px;
 }
 
+
+#loading-img {
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-iteration-count: 20;
+    position: absolute;
+    margin-top: -100px;
+    margin-left: 50px;
+    width: 100px;
+    height: 100px;
+    z-index: 1000;
+}
+
+
 #config select {
     margin-bottom: 15px;
 }
@@ -50,12 +73,12 @@
     float: left;
 }
 
-.input-todopago-campos{
+.input-todopago-campos {
     margin-bottom: 8px;
     float: left;
 }
 
-.input-todopago-campos input{
+.input-todopago-campos input {
     margin-bottom: 8px;
 }
 
@@ -138,6 +161,14 @@
     text-align: center;
     color: red;
     margin-top: 5px;
+}
+
+#guardar {
+    float: right;
+}
+
+.editar {
+    cursor: pointer;
 }
 
 #guardar {

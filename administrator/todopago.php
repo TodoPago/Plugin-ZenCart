@@ -3,8 +3,9 @@
 require('includes/application_top.php');
 require_once(dirname(__FILE__) . '/../includes/modules/payment/todopago/includes/todopago_ctes.php');
 //require_once(dirname(__FILE__).'/../includes/modules/payment/todopago/vendor/autoload.php');
+define('LOADING_IMG', '/includes/modules/payment/todopago/includes/images/loading_indicator_circle.png');
 ?>
-    <!doctype html>
+    <!doctype>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE"/>
@@ -101,7 +102,6 @@ global $db;
 require(DIR_WS_INCLUDES . 'header.php');
 $mensaje = "";
 $sql = "select * from " . TABLE_TP_CONFIGURACION;
-
 $res = $db->Execute($sql);
 $row = $res->fields;
 if (!isset($_POST['active_form_checker']))
@@ -120,7 +120,7 @@ if (isset($_POST['authorization'])) {
     // unset($_POST['authorization']);
     // NUEVO CHEQUEO DE DATOS
     if (!$row) { // Si no hay datos, agrego
-        $query = 'insert into ' . TABLE_TP_CONFIGURACION . ' (idConf,';
+        $query = 'INSERT INTO ' . TABLE_TP_CONFIGURACION . ' (idConf';
         foreach ($_POST as $key => $value) {
             $query .= $key . ",";
         }
@@ -154,7 +154,7 @@ if (isset($_POST['authorization'])) {
     }
 }
 $res = array();
-$sql = "select * from " . TABLE_TP_CONFIGURACION;
+$sql = "SELECT * FROM " . TABLE_TP_CONFIGURACION;
 $res = $db->Execute($sql);
 $row = $res->fields;
 $jsonAuthorization = json_decode($row['authorization']);
@@ -355,7 +355,7 @@ $jsonAuthorization = json_decode($row['authorization']);
                         <div class="subtitulo-todopago">ESTADOS DE LA ORDEN</div>
                         <div class="input-todopago">
                             <?php
-                            $sql = "select  orders_status_id,orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = 1";
+                            $sql = "SELECT  orders_status_id,orders_status_name FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = 1";
                             $res = $db->Execute($sql);
                             while (!$res->EOF) {
                                 $opciones[$res->fields["orders_status_id"]] = $res->fields['orders_status_name'];
@@ -464,6 +464,17 @@ $jsonAuthorization = json_decode($row['authorization']);
                             </div>
                             <div style="clear:both;"></div>
                         </div>
+                        <!-- Validación por google maps -->
+                        <div class="subtitulo-todopago">VALIDACIÓN POR GOOGLE MAPS</div>
+                        <div class="input-todopago">
+                            <label>Normalizar dirección del cliente a través de Google Maps</label>
+                            <div style="float:left;">
+                                <div style="margin-bottom:8px;"><input type="radio" name="gmaps_validator" value="1" <?php echo ($row['gmaps_validator'] == 1) ? 'checked="checked"' : '' ?> >Activado</div>
+                                <div><input type="radio" name="gmaps_validator" value="0" <?php echo ($row['gmaps_validator'] == 0 ) ? 'checked="checked"' : '' ?> >Desactivado
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end validación-->
                         <br>
                         <input type="button" id="btnsubmit" name="btnsubmit" value="Guardar Datos" onclick="validar()"/>
                     </form>
@@ -485,11 +496,11 @@ $jsonAuthorization = json_decode($row['authorization']);
                             </thead>
                             <tbody>
                             <?php
-                            $sql = "select p.products_id,pd.products_name,p.products_model from " . TABLE_PRODUCTS . " as p inner join " . TABLE_PRODUCTS_DESCRIPTION . " as pd on p.products_id = pd.products_id where language_id=1";
+                            $sql = "SELECT p.products_id,pd.products_name,p.products_model FROM " . TABLE_PRODUCTS . " AS p INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " AS pd ON p.products_id = pd.products_id WHERE language_id=1";
                             $res = $db->Execute($sql);
                             $i = 0;
                             while (!$res->EOF) {
-                                $sql = 'select * from ' . TABLE_TP_ATRIBUTOS . ' where product_id=' . $res->fields["products_id"];
+                                $sql = 'SELECT * FROM ' . TABLE_TP_ATRIBUTOS . ' WHERE product_id=' . $res->fields["products_id"];
                                 $res2 = $db->Execute($sql);
                                 $tipoDelivery = "";
                                 $tipoEnvio = "";
@@ -650,7 +661,7 @@ $jsonAuthorization = json_decode($row['authorization']);
                         </thead>
                         <tbody>
                         <?php
-                        $sql = "select orders_id,customers_name,customers_telephone,customers_email_address,date_purchased,orders_status_name from " . TABLE_ORDERS . " as o inner join " . TABLE_ORDERS_STATUS . " as os on os.orders_status_id = o.orders_status where os.language_id = " . $_SESSION['languages_id'] . " order by date_purchased desc";
+                        $sql = "SELECT orders_id,customers_name,customers_telephone,customers_email_address,date_purchased,orders_status_name FROM " . TABLE_ORDERS . " AS o INNER JOIN " . TABLE_ORDERS_STATUS . " AS os ON os.orders_status_id = o.orders_status WHERE os.language_id = " . $_SESSION['languages_id'] . " ORDER BY date_purchased DESC";
                         $res = $db->Execute($sql);
                         $i = 0;
                         while (!$res->EOF) {
@@ -729,11 +740,14 @@ $jsonAuthorization = json_decode($row['authorization']);
                     });
                     $("#refund-button").click(function refundButton_click() {
                         if (isValidAmount()) {
+                            $("#refund-dialog").append('<img id="loading-img" src="<?php echo HTTP_SERVER . '/' . DIR_WS_CATALOG . LOADING_IMG ?>"/>');
                             $.post("<?php echo HTTP_SERVER . '/' . DIR_WS_CATALOG?>/todo_pago_devoluciones_ajax.php", {
                                 order_id: $("#order-id-hidden").val(),
                                 refund_type: $("#refund-type-select").val(),
                                 amount: $("#amount-input").val()
                             }, function (response) {
+                                $("#loading-img").hide('fast');
+                                $("#loading-img").remove();
                                 $("#refund-form").hide();
                                 $("#refund-result").html(response);
                                 $("#refund-result").show();

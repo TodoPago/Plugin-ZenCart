@@ -42,57 +42,29 @@ if (!$res->EOF) {
     }
 
     if (isset($status['Operations']) && is_array($status['Operations']) ) {
-        foreach ($status['Operations'] as $key => $value) {
+        $rta = printGetStatus($status['Operations'], 0);
 
-            if(is_array($value) && $key == $auxColection){
-               
-                $rta .= " $key: \n";
-                foreach ($auxArray[$aux] as $key2 => $value2) {              
-                    $rta .= "  $aux: \n";                
-                    if(is_array($value2)){                    
-                        foreach ($value2 as $key3 => $value3) {
-                            if(is_array($value3)){                    
-                                foreach ($value3 as $key4 => $value4) {
-                                    $rta .= "   - $key4: $value4 </br>";
-                                }
-                             } else {
-				$rta .= "$key3: $value3 </br>";
-			     }
-                        }
-                    } else {
-			$rta .= "$key2: $value2 </br>";
-                    }
-                }
+        echo($rta);
+    }else{ 
+        echo('No hay operaciones para esta orden.'); 
+    }    
+}
 
-            }else{
+function printGetStatus($array, $indent) {
+    $rta = '';
 
-                if(is_array($value) && in_array($key, $listArrayShow)){
-
-                        if(sizeof($value) == 0){
-                            $rta .= "$key: </br>"; 
-                        }else{
-
-                            $rta .= "$key: </br>";
-                            $rta .= "<table style='margin-left:15px;'>";
-                            $rta .= "<tr>";    
-                            foreach($value as $id => $content){
-                                $rta .= "<td>".$content."</td>";                                
-                            }
-                            $rta .= "</tr>";
-                            $rta .= "</table>";
-                        }
-                    
-                }else{
-		    if(is_array($value)) {
-                        foreach($value as $keyX => $valueX) {
-                            $rta .= "$keyX: $valueX </br>";
-                        }
-                    } else {
-                        $rta .= "$key: $value </br>";
-                    }
-                }
-            } 
+    foreach ($array as $key => $value) {
+        if ($key !== 'nil' && $key !== "@attributes") {
+            if (is_array($value) ){
+                $rta .= "<tr>";
+                $rta .= "<td>".str_repeat("-", $indent) . "<strong>$key: </strong></td>";
+                $rta .= "<td>".printGetStatus($value, $indent + 2)."</td>";
+                $rta .= "</tr>";
+            } else {
+                $rta .= "<tr><td>".str_repeat("-", $indent) . "<strong>$key:</strong></td><td>$value</td></tr>";
+            }
         }
-    }else{ $rta = 'No hay operaciones para esta orden.'; }    
-    echo($rta);
+    }
+    
+    return $rta;
 }
