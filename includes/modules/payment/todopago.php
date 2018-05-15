@@ -168,7 +168,7 @@ class todopago extends base
         $optionsSAR_operacion = $controlFraude->getDataCF();
 		$optionsSAR_operacion['ECOMMERCENAME'] = strtoupper(PROJECT_VERSION_NAME);
 		$optionsSAR_operacion['ECOMMERCEVERSION'] = PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR;
-		$optionsSAR_operacion['PLUGINVERSION'] = TP_PLUGIN_VERSION . $codigoTipoFormulario;
+		$optionsSAR_operacion['PLUGINVERSION'] = TP_VERSION . $codigoTipoFormulario;
         $optionsSAR_operacion['MERCHANT'] = strval($data['merchant']);
         $optionsSAR_operacion['OPERATIONID'] = strval($insert_id);
         $optionsSAR_operacion['CURRENCYCODE'] = '032';

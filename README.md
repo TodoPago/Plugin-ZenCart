@@ -81,12 +81,12 @@ En la configuracion del plugin tambien estara la posibilidad de mostrarle al cli
 Para esto , en la configuracion se debe seleccionar el campo formulario integrado al e-commerce:
 ![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/todopago_maxcuotas_2_forms.png)
 <sub></br>Del lado del cliente el formulario se vera asi:</br></sub>
-![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/formHib2.png)
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/form_hibridov3_gen.png)
 </br>
 <br>
 El formulario tiene dos formas de pago, ingresando los datos de una tarjeta ó utilizando la billetera de Todopago. Al ir a "Pagar con Billetera" desplegara una ventana que permitira ingresar a billetera y realizar el pago.
 <br>
-![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/formulario-billetera.png)
+![imagen de configuracion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/formhibridov3_billetera_zencart.png)
 [<sub>Volver a inicio</sub>](#inicio)
 
 <a name="temform"></a>

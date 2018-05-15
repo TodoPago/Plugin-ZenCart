@@ -109,6 +109,38 @@ if (!isset($_POST['active_form_checker']))
 if (isset($_POST['form_timeout']) && $_POST['form_timeout'] === null) {
     $_POST['form_timeout'] = 300000; //min value of timeout
 }
+
+//get plugin version from github
+$token = "token 21600a0757d4b32418c54e3833dd9d47f78186b4";
+
+$curl = curl_init();
+curl_setopt_array($curl, array(
+    CURLOPT_HTTPHEADER => array(
+        'Content-Type: application/json',
+        'Authorization:'.$token
+    ),
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_SSL_VERIFYHOST => false, 	
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => 'https://api.github.com/repos/TodoPago/Plugin-ZenCart/releases/latest',
+    CURLOPT_USERAGENT => 'Codular Sample cURL Request',
+));
+
+$resp = curl_exec($curl);
+$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+curl_close($curl);
+
+$json_r = json_decode($resp, true);
+$repo_version = substr($json_r['tag_name'], 1);
+
+$new_version = false;
+
+if($http_status == 200){
+    if(version_compare($repo_version, TP_VERSION, '>')){
+        $new_version = true;
+    }
+}
+
 if (isset($_POST['authorization'])) {
     $autorization_post = str_replace('\"', '"', $_POST["authorization"]);
     if (json_decode($autorization_post) == NULL) {
@@ -160,7 +192,7 @@ $row = $res->fields;
 $jsonAuthorization = json_decode($row['authorization']);
 ?>
 <link rel="stylesheet" type="text/css"
-      href="<?php echo HTTP_SERVER . '/' . DIR_WS_CATALOG ?>/includes/modules/payment/todopago/todopago.css"/>
+      href="<?php echo HTTP_SERVER . '/' . DIR_WS_CATALOG ?>/includes/modules/payment/todopago/css/todopago.css"/>
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css"
       href="<?php echo HTTP_SERVER . '/' . DIR_WS_CATALOG ?>/includes/modules/payment/todopago/includes/datatables/jquery.dataTables.css"/>
@@ -174,6 +206,32 @@ $jsonAuthorization = json_decode($row['authorization']);
 <script type="text/javascript" charset="utf8"
         src="<?php echo HTTP_SERVER . '/' . DIR_WS_CATALOG ?>/includes/modules/payment/todopago/includes/datatables/dataTables.tableTools.min.js"></script>
 
+<!-- Modal -->
+<div id="modalCredentials" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <img src="http://www.todopago.com.ar/sites/todopago.com.ar/files/logo.png">
+      </div>
+      <div class="modal-body">
+        <p>Ingresa con tus credenciales para Obtener los datos de configuración</p><br>
+        <label class="control-label">E-mail</label>
+        <input id="mail" class="form-control" name="mail" type="email" value="" placeholder="E-mail"/>
+        <label class="control-label">Contrase&ntilde;a</label>
+        <input id="pass" class="form-control" name="pass" type="password" value=""
+               placeholder="Contrase&ntilde;a"/>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-form-credentials" class="btn btn-default" style="background-color: rgb(230, 0, 126); color:rgb(255, 255, 255);">Acceder</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
     <tr>
         <td>
@@ -190,7 +248,16 @@ $jsonAuthorization = json_decode($row['authorization']);
         </td>
     </tr>
     <tr>
-        <td><?php echo($mensaje); ?></td>
+    <?php if($new_version){ ?>       
+        <td>
+            <div class="messageStackCaution larger message-notification">Se encuentra disponible una versión más reciente del plugin de Todo Pago, puede consultarla desde <a href="https://github.com/TodoPago/Plugin-ZenCart">aquí</a>.</div>
+        </td>
+    <?php } ?> 
+    </tr>
+    <tr>
+        <td class="message-notification">
+            <span><?php echo($mensaje); ?></span>        
+        </td>
     </tr>
     <tr>
         <td>
@@ -202,18 +269,9 @@ $jsonAuthorization = json_decode($row['authorization']);
                     <li><a class="tabs-todopago" todopago="#orden">Ordenes</a></li>
                 </ul>
                 <div id="config">
-                    <div id="credentials-login" class="order-action-popup ui-dialog" style="display:none;">
-                        <img src="http://www.todopago.com.ar/sites/todopago.com.ar/files/logo.png">
-                        <p>Ingresa con tus credenciales para Obtener los datos de configuración</p>
-                        <label class="control-label">E-mail</label>
-                        <input id="mail" class="form-control" name="mail" type="email" value="" placeholder="E-mail"/>
-                        <label class="control-label">Contrase&ntilde;a</label>
-                        <input id="pass" class="form-control" name="pass" type="password" value=""
-                               placeholder="Contrase&ntilde;a"/>
-                        <button id="btn-form-credentials" style="margin:20%;" class="btn-config-credentials">Acceder
-                        </button>
-                    </div>
-                    <button id="btn-credentials" class="btn-config-credentials" style=>Obtener credenciales</button>
+                    
+                    <button type="button" class="btn-config-credentials" data-toggle="modal" data-target="#modalCredentials">Obtener credenciales</button>
+
                     <script type="text/javascript">
                         $("#btn-credentials").click(function () {
                             //console.log($("ui-button-text") );
@@ -240,10 +298,11 @@ $jsonAuthorization = json_decode($row['authorization']);
                                             $('input:text[name=production_merchant]').val(obj.merchantId);
                                             $('input:text[name=production_security]').val(obj.apiKey);
                                         }
+                                        $("#mail").val("");$("#pass").val("");
                                     }
                                 }
                             );
-                            $("#credentials-login").dialog('close');
+                            $("#modalCredentials .close").click();
                         });
                     </script>
                     <form action="" method="post" id="formulario" name="formulario">
@@ -465,7 +524,7 @@ $jsonAuthorization = json_decode($row['authorization']);
                             <div style="clear:both;"></div>
                         </div>
                         <!-- Validación por google maps -->
-                        <div class="subtitulo-todopago">VALIDACIÓN POR GOOGLE MAPS</div>
+                        <!--div class="subtitulo-todopago">VALIDACIÓN POR GOOGLE MAPS</div>
                         <div class="input-todopago">
                             <label>Normalizar dirección del cliente a través de Google Maps</label>
                             <div style="float:left;">
@@ -473,7 +532,7 @@ $jsonAuthorization = json_decode($row['authorization']);
                                 <div><input type="radio" name="gmaps_validator" value="0" <?php echo ($row['gmaps_validator'] == 0 ) ? 'checked="checked"' : '' ?> >Desactivado
                                 </div>
                             </div>
-                        </div>
+                        </div-->
                         <!-- end validación-->
                         <br>
                         <input type="button" id="btnsubmit" name="btnsubmit" value="Guardar Datos" onclick="validar()"/>

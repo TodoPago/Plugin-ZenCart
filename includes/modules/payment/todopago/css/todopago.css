@@ -266,3 +266,9 @@
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
+.message-notification {
+    padding: 10px 10px 10px 39px;
+    margin-bottom:5px;
+}
+
