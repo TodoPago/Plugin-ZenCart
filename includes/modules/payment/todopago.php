@@ -476,10 +476,10 @@ class todopago extends base
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort order of display.', 'MODULE_PAYMENT_TODOPAGOPLUGIN_SORT_ORDER', '0', 'Order de despliegue. El mas bajo se despliega primero.', '6', '0', now())");
         $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) VALUES (5, 1, 'Canceled')");
         $db->Execute("CREATE TABLE IF NOT EXISTS `" . TABLE_TP_ATRIBUTOS . "` ( `product_id` BIGINT NOT NULL , `CSITPRODUCTCODE` VARCHAR(150) NOT NULL COMMENT 'Codigo del producto' , `CSMDD33` VARCHAR(150) NOT NULL COMMENT 'Dias para el evento' , `CSMDD34` VARCHAR(150) NOT NULL COMMENT 'Tipo de envio' , `CSMDD28` VARCHAR(150) NOT NULL COMMENT 'Tipo de servicio' , `CSMDD31` VARCHAR(150) NOT NULL COMMENT 'Tipo de delivery' ) ENGINE = MyISAM;");
-        $db->Execute("CREATE TABLE IF NOT EXISTS `" . TABLE_TP_CONFIGURACION . "` ( `idConf` INT NOT NULL PRIMARY KEY, `authorization` VARCHAR(100) NOT NULL , `segmento` VARCHAR(100) NOT NULL , `canal` VARCHAR(100) NOT NULL , `ambiente` VARCHAR(100) NOT NULL , `deadline` VARCHAR(100) NOT NULL ,`maxinstallments` TINYINT UNSIGNED NOT NULL DEFAULT 0, `test_merchant` VARCHAR(100) NOT NULL , `test_security` VARCHAR(100) NOT NULL , `production_merchant` VARCHAR(100) NOT NULL , `production_security` VARCHAR(100) NOT NULL , `estado_inicio` VARCHAR(100) NOT NULL , `estado_aprobada` VARCHAR(100) NOT NULL , `estado_rechazada` VARCHAR(100) NOT NULL , `tipo_formulario` TINYINT UNSIGNED DEFAULT 0, `estado_offline` VARCHAR(100) NOT NULL, `active_form_checker` TINYINT UNSIGNED DEFAULT 0, `form_timeout` INT UNSIGNED, `keep_shopping_cart` TINYINT UNSIGNED DEFAULT 0,`gmaps_validator` BOOL DEFAULT 0) ENGINE = MyISAM;");
+        $db->Execute("CREATE TABLE IF NOT EXISTS `" . TABLE_TP_CONFIGURACION . "` ( `idConf` INT NOT NULL PRIMARY KEY, `authorization` VARCHAR(100) NOT NULL , `segmento` VARCHAR(100) NOT NULL , `canal` VARCHAR(100) NOT NULL , `ambiente` VARCHAR(100) NOT NULL , `deadline` VARCHAR(100) NOT NULL ,`maxinstallments` TINYINT UNSIGNED NOT NULL DEFAULT 0, `test_merchant` VARCHAR(100) NOT NULL , `test_security` VARCHAR(100) NOT NULL , `production_merchant` VARCHAR(100) NOT NULL , `production_security` VARCHAR(100) NOT NULL , `estado_inicio` VARCHAR(100) NOT NULL , `estado_aprobada` VARCHAR(100) NOT NULL , `estado_rechazada` VARCHAR(100) NOT NULL , `tipo_formulario` TINYINT UNSIGNED DEFAULT 0, `estado_offline` VARCHAR(100) NOT NULL, `active_form_checker` TINYINT UNSIGNED DEFAULT 0, `form_timeout` INT UNSIGNED, `keep_shopping_cart` TINYINT UNSIGNED DEFAULT 0,`gmaps_validator` BOOL DEFAULT 0, `banner_billetera` VARCHAR(100) NOT NULL) ENGINE = MyISAM;");
         $db->Execute("CREATE TABLE IF NOT EXISTS `" . TABLE_TP_ADDRESS_BOOK . "` ( `id` INT NOT NULL AUTO_INCREMENT, `md5_hash` VARCHAR(33), `street` VARCHAR(100), `state` VARCHAR(3), `city` VARCHAR(100), `country` VARCHAR(3), `postal` VARCHAR(50), PRIMARY KEY (id)) ENGINE = MyISAM;");
         $db->Execute("DELETE FROM `" . TABLE_TP_CONFIGURACION . "`");
-        $db->Execute("INSERT INTO `" . TABLE_TP_CONFIGURACION . "` (`idConf`, `authorization`, `segmento`, `canal`, `ambiente`, `deadline`, `test_merchant`, `test_security`, `production_merchant`, `production_security`, `estado_inicio`, `estado_aprobada`, `estado_rechazada`, `tipo_formulario`, `estado_offline`) VALUES ('1', '', '', '', '', '', '', '', '', '', '', '', '', '0', '')");
+        $db->Execute("INSERT INTO `" . TABLE_TP_CONFIGURACION . "` (`idConf`, `authorization`, `segmento`, `canal`, `ambiente`, `deadline`, `test_merchant`, `test_security`, `production_merchant`, `production_security`, `estado_inicio`, `estado_aprobada`, `estado_rechazada`, `tipo_formulario`, `estado_offline`, `banner_billetera`) VALUES ('1', '', '', '', '', '', '', '', '', '', '', '', '', '0', '', '')");
         $db->Execute("CREATE TABLE IF NOT  EXISTS `" . TABLE_TP_TRANSACCION . "` (
                        `id` INT NOT NULL AUTO_INCREMENT,
                        `id_orden` INT NULL,
@@ -501,6 +501,13 @@ class todopago extends base
     function remove()
     {
         global $db;
+
+        //borrando BVTP
+        $resultBVTP = $db->Execute("SELECT configuration_value FROM `" . TABLE_CONFIGURATION ."` WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED' ");
+        $modulesDB = $resultBVTP->fields['configuration_value']; 
+        $modulesDB = str_replace(";todopagobilletera.php","",$modulesDB);        
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " set configuration_value='".$modulesDB."' WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED' ");
+
         $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
         $db->Execute("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_name = 'Canceled'");
         $db->Execute("DROP TABLE IF EXISTS " . TABLE_TP_CONFIGURACION);

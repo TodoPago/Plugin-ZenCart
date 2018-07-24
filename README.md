@@ -31,6 +31,8 @@ La versión de este plug in esta testeada en PHP 5.3-5.4-5.6, Zen-Cart 1.5.4
 ![imagen de instalacion](https://raw.githubusercontent.com/TodoPago/imagenes/master/zencart/install.png)
 Observación: Descomentar <strong>extension=php_soap.dll</strong> y <strong>extension=php_openssl.dll</strong> del php.ini, ya que para la conexión al gateway se utiliza la clase SoapClient del API de PHP.
 
+<strong>Para hace una instalacion desde una antigua, debe desistalar la version anterior e instalar la nueva posteriormente.</strong>
+
 [<sub>Volver a inicio</sub>](#inicio)
 
 

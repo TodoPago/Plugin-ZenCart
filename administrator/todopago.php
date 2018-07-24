@@ -77,10 +77,20 @@ define('LOADING_IMG', '/includes/modules/payment/todopago/includes/images/loadin
             for (index = 0, length = elementos.length; index < length; ++index) {
                 var valor = elementos[index].value;
                 var regEx = new RegExp('^[a-zA-Z0-9 ]*$');
-                if (!regEx.test(valor)) {
-                    colorear(elementos[index]);
-                    valido = false;
+                var regExUrl = new RegExp('(https?:\/\/.*\.(?:png|jpg|jpeg))');
+
+                if(elementos[index].name == 'banner_billetera'){
+                    if (!regExUrl.test(valor)) {
+                        colorear(elementos[index]);
+                        valido = false;
+                    }
+                }else{
+                    if (!regEx.test(valor)) {
+                        colorear(elementos[index]);
+                        valido = false;
+                    }
                 }
+                
             }
             if (!timeoutInput.hasAttribute('disabled')) {
                 if (timeoutInput.value > 21600000 || timeoutInput.value < 300000) {
@@ -170,6 +180,7 @@ if (isset($_POST['authorization'])) {
         $query = $query . ")";
 
         $db->Execute($query);
+
         $mensaje = "La configuracion se guardo correctamente";
     } else { // Si ya existen datos, actualizo
         $query = 'update ' . TABLE_TP_CONFIGURACION . ' set ';
@@ -182,8 +193,12 @@ if (isset($_POST['authorization'])) {
         }
         $query = trim($query, ",");
         $db->Execute($query);
+
         $mensaje = "La configuracion se guardo correctamente";
+        
     }
+    //agregando banner billetera
+        $db->Execute("UPDATE `" . TABLE_CONFIGURATION . "` set configuration_value=concat(configuration_value, ';todopagobilletera.php') WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED' AND configuration_value NOT LIKE '%todopagobilletera%' ");
 }
 $res = array();
 $sql = "SELECT * FROM " . TABLE_TP_CONFIGURACION;
@@ -492,6 +507,25 @@ $jsonAuthorization = json_decode($row['authorization']);
                                 <input type="radio" name="keep_shopping_cart"
                                        value="0" <?php echo ($row['keep_shopping_cart'] == 0) ? 'checked="checked"' : ''; ?> >
                                 Vaciar carrito
+                            </div>
+                        </div>
+
+                        <div class="subtitulo-todopago">BILLETERA EN CHECKOUT</div>
+                        <div class="input-todopago">
+                            <label>Seleccione el banner que desea mostrar para billetera</label>
+                            <div class="input-todopago-campos">
+                                <input checked type="radio" name="banner_billetera"
+                                       value="https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta1.jpg" <?php echo ($row['banner_billetera'] == 'https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta1.jpg') ? 'checked="checked"' : ''; ?> >
+                                <img src="https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta1.jpg" style="width: 270px">
+                                <br>
+                                <input type="radio" name="banner_billetera"
+                                       value="https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta2.jpg" <?php echo ($row['banner_billetera'] == 'https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta2.jpg') ? 'checked="checked"' : ''; ?> >
+                                <img src="https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta2.jpg" style="width: 270px">
+                                <br>
+                                <input type="radio" name="banner_billetera"
+                                       value="https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta3.jpg" <?php echo ($row['banner_billetera'] == 'https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta3.jpg') ? 'checked="checked"' : ''; ?> >
+                                <img src="  https://todopago.com.ar/sites/todopago.com.ar/files/billetera/pluginstarjeta3.jpg" style="width: 270px">
+                                
                             </div>
                         </div>
 

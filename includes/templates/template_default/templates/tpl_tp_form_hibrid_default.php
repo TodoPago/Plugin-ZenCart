@@ -7,7 +7,9 @@ global $messageStack;
 
 if (isset($_GET['id'])) {
     global $customer_id;
-
+    global $_SESSION;
+    $method_payment = $_SESSION["payment"];
+    
     $resultConfig = $db->Execute('SELECT * FROM todo_pago_configuracion');
 
     //set url form js
@@ -78,6 +80,7 @@ if (isset($_GET['id'])) {
     <div class="bold">Total a pagar $<?php echo($total_amount) ?></div>
     <div>Elegí tu forma de pago</div>
 </div>
+
 <div class="tp_wrapper" id="tpForm">
     <section class="billetera_virtual_tp">
         <div class="tp_row">
@@ -239,7 +242,7 @@ if (isset($_GET['id'])) {
 
 <script language="javascript">
     var tpformJquery = $.noConflict();
-
+    var method_payment = '<?php echo $method_payment; ?>';
     var formaDePago = document.getElementById("formaPagoCbx");
     var medioDePago = document.getElementById('medioPagoCbx');
     var tarjetaLogo = document.getElementById('tp-tarjeta-logo');
@@ -336,6 +339,10 @@ if (isset($_GET['id'])) {
         
         setTimeout(function () {
             tpformJquery("#tpForm").fadeTo('fast', 1);
+            if(method_payment == "todopagobilletera"){
+                $("#btn_Billetera").click();
+                $(".billetera_tp").hide();
+            }
         }, 2200);
     }
 
@@ -496,6 +503,7 @@ if (isset($_GET['id'])) {
             defaultMail: '<?php echo $mail; ?>',
             defaultTipoDoc: 'DNI'
         });
+        $("#btn_Billetera").html("Iniciar Sesión");
     }
 
 </script>
